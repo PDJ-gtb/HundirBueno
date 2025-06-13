@@ -6,21 +6,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="src" path="src"/>
-	<classpathentry kind="lib" path="/PracticaEquipos/drivers/barcodes-7.2.1.jar"/>
-	<classpathentry kind="lib" path="/PracticaEquipos/drivers/commons-7.2.1.jar"/>
-	<classpathentry kind="lib" path="/PracticaEquipos/drivers/font-asian-7.2.1.jar"/>
-	<classpathentry kind="lib" path="/PracticaEquipos/drivers/forms-7.2.1.jar"/>
-	<classpathentry kind="lib" path="/PracticaEquipos/drivers/hyph-7.2.1.jar"/>
-	<classpathentry kind="lib" path="/PracticaEquipos/drivers/io-7.2.1.jar"/>
-	<classpathentry kind="lib" path="/PracticaEquipos/drivers/kernel-7.2.1.jar"/>
-	<classpathentry kind="lib" path="/PracticaEquipos/drivers/layout-7.2.1.jar"/>
 	<classpathentry kind="lib" path="/PracticaEquipos/drivers/mysql-connector-java-8.0.29.jar"/>
-	<classpathentry kind="lib" path="/PracticaEquipos/drivers/pdfa-7.2.1.jar"/>
-	<classpathentry kind="lib" path="/PracticaEquipos/drivers/pdftest-7.2.1.jar"/>
-	<classpathentry kind="lib" path="/PracticaEquipos/drivers/sign-7.2.1.jar"/>
-	<classpathentry kind="lib" path="/PracticaEquipos/drivers/slf4j-api-1.7.25.jar"/>
-	<classpathentry kind="lib" path="/PracticaEquipos/drivers/slf4j-nop-1.7.25.jar"/>
-	<classpathentry kind="lib" path="/PracticaEquipos/drivers/styled-xml-parser-7.2.1.jar"/>
-	<classpathentry kind="lib" path="/PracticaEquipos/drivers/svg-7.2.1.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
