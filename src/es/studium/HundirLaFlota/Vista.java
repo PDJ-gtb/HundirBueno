@@ -723,9 +723,7 @@ public class Vista {
 	        if (impacto) break;
 	    }
 
-	    if (impacto) {
-	    	 contadorPuntosCPU+=15;
-	    	 }
+	    
 
 	    System.out.println("Ha disparado la CPUUUUUUUUUUUU");
 	    turno = 0;
@@ -768,7 +766,7 @@ public class Vista {
 
 
 
-
+// PUSH
 
 	public void manejarDisparo(Point click) {
 		// SOLO PARA VERIFICAR SI SE HA DISPARADO YA AHI
