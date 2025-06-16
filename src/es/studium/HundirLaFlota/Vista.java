@@ -6,6 +6,7 @@ import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
+import java.awt.FontFormatException;
 import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -21,6 +22,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -50,7 +52,7 @@ import javax.swing.Timer;
 import javax.swing.table.DefaultTableModel;
 
 public class Vista {
-	Font fuente = new Font("Wrecked Ship", Font.BOLD, 24);
+	Font fuente = new Font("./font/Warzone.ttf", Font.BOLD, 24);
 
 	// Ventanas y paneles
 	JFrame login = new JFrame("Login");
@@ -594,8 +596,8 @@ public class Vista {
 
 	public void inicializarMenu() {
 	    // Fuente para título y botones
-	    Font fuenteTitulo = new Font("Wrecked Ship", Font.BOLD, 42);
-	    Font fuenteBoton = new Font("Arial", Font.BOLD, 20);
+		Font fuenteTitulo = cargarFuentePersonalizada("./font/Warzone.ttf", 42f, Font.BOLD);
+		Font fuenteBoton = cargarFuentePersonalizada("./font/Warzone.ttf", 12f, Font.BOLD);
 
 	    // Estilos de botones
 	    JButton[] botones = {btnNuevaPartida, btnRanking, btnAyuda, btnSalir};
@@ -650,6 +652,9 @@ public class Vista {
 
 
 	public void inicializarNuevaPartida() {
+		
+		Font fuenteNuevaPartida = cargarFuentePersonalizada("./font/Warzone.ttf", 22f, Font.BOLD);
+		
 		// Cargar la imagen (usa tu método 'caja.getImage' si funciona correctamente)
 		imagen = caja.getImage("./tablero.png");
 
@@ -663,8 +668,7 @@ public class Vista {
 					g.drawImage(imagen, 0, 0, 1782, 625, this);
 				}
 
-				Font font = new Font("Wrecked Ship", Font.ITALIC | Font.BOLD, 25); 
-				g.setFont(font); 
+				g.setFont(fuenteNuevaPartida);
 				g.setColor(Color.black);
 
 				Graphics2D g2 = (Graphics2D) g;
@@ -672,11 +676,7 @@ public class Vista {
 
 				String texto1 = "ALMIRANTE";
 				int anchoTexto1 = fm.stringWidth(texto1);  // Calcula el ancho en píxeles
-				g2.drawString(texto1, 890 - anchoTexto1 / 2, 170);  // Centrado horizontal
-
-				String texto2 = "NOMBRE";
-				int anchoTexto2 = fm.stringWidth(texto2);
-				g2.drawString(texto2, 890 - anchoTexto2 / 2, 195);
+				g2.drawString(texto1, 890 - anchoTexto1 / 2, 180);  // Centrado horizontal
 
 				String texto3 = "BARCOS";
 				int anchoTexto3 = fm.stringWidth(texto3);
@@ -685,14 +685,6 @@ public class Vista {
 				String texto6 = "RESTANTES";
 				int anchoTexto6 = fm.stringWidth(texto6);
 				g2.drawString(texto6, 890 - anchoTexto6 / 2, 295);
-
-				String texto4 = "PUNTUACIÓN";
-				int anchoTexto4 = fm.stringWidth(texto4);
-				g2.drawString(texto4, 890 - anchoTexto4 / 2, 530);
-
-				String texto5 = "1000 PTS";
-				int anchoTexto5 = fm.stringWidth(texto5);
-				g2.drawString(texto5, 890 - anchoTexto5 / 2, 555);
 
 				String textoCPU = "JUGADOR";
 				int anchoTextoCPU = fm.stringWidth(textoCPU);
@@ -816,6 +808,8 @@ public class Vista {
 	}
 	public void iniciarDisparos()
 	{
+		Font fuenteNuevaPartida = cargarFuentePersonalizada("./font/Warzone.ttf", 22f, Font.BOLD);
+		
 		inicializarFormacionesCPU();
 		List<List<Point>> formacionElegidaCPU = obtenerFormacionAleatoria();
 
@@ -845,26 +839,32 @@ public class Vista {
 					g.drawImage(imagen, 0, 0, 1782, 625, this);
 				}
 
-				Font font = new Font("Call of Ops Duty II", Font.ITALIC | Font.BOLD, 27); 
-				g.setFont(font); 
-				g.setColor(Color.black);; // o el color que prefieras
+				g.setFont(fuenteNuevaPartida);
+				g.setColor(Color.black);
 
 				Graphics2D g2 = (Graphics2D) g;
 				FontMetrics fm = g2.getFontMetrics();  // Obtiene las métricas de la fuente actual
 
 				String texto1 = "ALMIRANTE";
 				int anchoTexto1 = fm.stringWidth(texto1);  // Calcula el ancho en píxeles
-				g2.drawString(texto1, 890 - anchoTexto1 / 2, 170);  // Centrado horizontal
+				g2.drawString(texto1, 890 - anchoTexto1 / 2, 180);  // Centrado horizontal
 
-				String texto2 = "NOMBRE";
-				int anchoTexto2 = fm.stringWidth(texto2);
-				g2.drawString(texto2, 890 - anchoTexto2 / 2, 195);
+				String texto3 = "BARCOS";
+				int anchoTexto3 = fm.stringWidth(texto3);
+				g2.drawString(texto3, 890 - anchoTexto3 / 2, 270);
 
-				
+				String texto6 = "RESTANTES";
+				int anchoTexto6 = fm.stringWidth(texto6);
+				g2.drawString(texto6, 890 - anchoTexto6 / 2, 295);
 
-				// Mostrar puntuación del jugador y de la CPU
-				g.setFont(new Font("Arial", Font.BOLD, 18));
-				g.setColor(Color.BLACK);
+				String textoCPU = "JUGADOR";
+				int anchoTextoCPU = fm.stringWidth(textoCPU);
+				g2.drawString(textoCPU, 410 - anchoTextoCPU / 2, 585);
+
+				String textoJugador = "CPU";
+				int anchoTextoJugador = fm.stringWidth(textoJugador);
+				g2.drawString(textoJugador, 1386 - anchoTextoJugador / 2, 585);
+
 
 				String puntosJugadorTexto = "Jugador: " + puntosUsuario;
 				int anchoJugador = fm.stringWidth(puntosJugadorTexto);
@@ -1409,6 +1409,16 @@ public class Vista {
 	        clip.start();
 	    } catch (Exception e) {
 	        e.printStackTrace();
+	    }
+	}
+
+	private Font cargarFuentePersonalizada(String ruta, float tamanio, int estilo) {
+	    try {
+	        Font fuente = Font.createFont(Font.TRUETYPE_FONT, new File(ruta));
+	        return fuente.deriveFont(estilo, tamanio);
+	    } catch (FontFormatException | IOException e) {
+	        e.printStackTrace();
+	        return new Font("Arial", estilo, (int) tamanio); // Fuente de respaldo
 	    }
 	}
 
