@@ -1,20 +1,21 @@
 package es.studium.HundirLaFlota;
 
+import java.awt.BorderLayout;
 import java.awt.Button;
+import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.Dialog;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
-import java.awt.Frame;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GridLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.Image;
-import java.awt.Label;
+import java.awt.Insets;
 import java.awt.Point;
 import java.awt.Rectangle;
-import java.awt.TextField;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -30,45 +31,59 @@ import java.util.Set;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
+import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.Timer;
+import javax.swing.table.DefaultTableModel;
 
 public class Vista {
 	Font fuente = new Font("Wrecked Ship", Font.BOLD, 24);
 
+	// Ventanas y paneles
 	JFrame login = new JFrame("Login");
 	JFrame partida = new JFrame("Partida");
-	Frame carga = new Frame("Pantalla de Carga");
 	JFrame menuPrincipal = new JFrame("Menú Principal");
+	JFrame nuevaPartida = new JFrame("Partida");
+	JDialog errorLog = new JDialog(login, "Mensaje", true);
+
+	// Paneles
 	JPanel distribucionPanel = new JPanel();
 	JPanel panelColocacion = new JPanel();
 	JPanel panelDisparo = new JPanel();
-	JFrame nuevaPartida = new JFrame("Partida");
 
-	Dimension tamanoFijo = new Dimension(100, 40);
+	// Etiquetas y campos de texto
+	JLabel lblUsuario = new JLabel("Usuario:", SwingConstants.CENTER);
+	JTextField txtUsuario = new JTextField(20);
 
-	Dialog errorLog = new Dialog(login, "Mensaje", true);
-	Label mensajeFB = new Label("      ¡Error en los credenciales!");
+	JLabel lblContrasena = new JLabel("Contraseña:", SwingConstants.CENTER);
+	JPasswordField txtContrasena = new JPasswordField(20);
 
-	// Elementos Login
-	Label lblUsuario = new Label("Usuario:", Label.CENTER);
-	TextField txtUsuario = new TextField(20);
-	Label lblContrasena = new Label("Contraseña:", Label.CENTER);
-	TextField txtContrasena = new TextField(20);
-	Button btnLogear = new Button("Login");
+	// Botones
+	JButton btnLogear = new JButton("Login");
+	JButton btnNuevaPartida = new JButton("Nueva Partida");
+	JButton btnRanking = new JButton("Ranking");
+	JButton btnAyuda = new JButton("Ayuda");
+	JButton btnSalir = new JButton("Salir");
 
-	// Elementos Menu
-	Label lblTitulo = new Label("Hundir La Flota", Label.CENTER);
-	Button btnNuevaPartida = new Button("Nueva Partida");
-	Button btnRanking = new Button("Ranking");
-	Button btnAyuda = new Button("Ayuda");
-	Button btnSalir = new Button("Salir");
+	// Etiquetas adicionales
+	JLabel lblTitulo = new JLabel("Hundir La Flota", SwingConstants.CENTER);
+	JLabel mensajeFB = new JLabel("¡Error en los credenciales!", SwingConstants.CENTER);
 
+	// Recursos
 	Toolkit caja = Toolkit.getDefaultToolkit();
 	Image imagen;
+
+	// Tamaño de botones si lo necesitas
+	Dimension tamanoFijo = new Dimension(100, 40);
 
 
 
@@ -119,13 +134,26 @@ public class Vista {
 	private int radioExplosion = 0;
 	private Timer timerExplosion;
 
+	CardLayout layout = new CardLayout();
+	JPanel contenedorPaneles = new JPanel(layout);
+
+
+
+	
+	
+	
+	//  RANKING
+	public JFrame rankingFrame = new JFrame("Ranking de Jugadores");
+	public JTable tablaRanking;
+	public DefaultTableModel modeloRanking;
 
 	public Vista() {
 
 
 		inicializarLogin();
-		inicializarMenu();
-		inicializarNuevaPartida();
+		
+		
+		
 		// COORDENADAS DE TOODO EL TABLERO
 		coordenadasBarco[0] = new Point(111, 97);   // A1
 		coordenadasBarco[1] = new Point(177, 97);   // A2
@@ -466,8 +494,27 @@ public class Vista {
 		coordenadasTableroUsuario[99] = new Point(705, 529);  // J10
 
 
+		contenedorPaneles.add(panelColocacion, "colocacion");
+		contenedorPaneles.add(panelDisparo, "disparo");
+
+		nuevaPartida.setContentPane(contenedorPaneles); // Estableces el contenedor como el panel principal
+
 	}
 
+	public void inicializarRanking() {
+	    String[] columnas = { "Jugador", "Victorias" };
+	    modeloRanking = new DefaultTableModel(columnas, 0);
+	    tablaRanking = new JTable(modeloRanking);
+
+	    tablaRanking.setFillsViewportHeight(true);
+	    tablaRanking.setRowHeight(25);
+	    tablaRanking.setEnabled(false);
+
+	    JScrollPane scroll = new JScrollPane(tablaRanking);
+	    rankingFrame.setSize(400, 300);
+	    rankingFrame.setLocationRelativeTo(null);
+	    rankingFrame.add(scroll);
+	}
 
 
 	private Point obtenerCeldaDesdeClick(Point click) {
@@ -485,48 +532,105 @@ public class Vista {
 	}
 
 
-	private void inicializarLogin() {
-		login.setLayout(new GridLayout(5, 5, 5, 5));
-		login.add(lblUsuario);
-		login.add(txtUsuario);
-		login.add(lblContrasena);
-		login.add(txtContrasena);
-		login.add(btnLogear);
+	public void inicializarLogin() {
+	    // Panel principal para login
+	    JPanel panelLogin = new JPanel(new GridBagLayout());
+	    panelLogin.setBackground(Color.WHITE); // Fondo limpio
 
-		login.setSize(400, 200);
-		login.setBackground(Color.pink);
-		login.setVisible(false);
+	    GridBagConstraints gbc = new GridBagConstraints();
+	    gbc.insets = new Insets(10, 10, 10, 10);
+	    gbc.fill = GridBagConstraints.HORIZONTAL;
 
-		errorLog.add(mensajeFB);
-		errorLog.setSize(200, 200);
-		errorLog.setLocationRelativeTo(null);
+	    // Usuario
+	    gbc.gridx = 0;
+	    gbc.gridy = 0;
+	    panelLogin.add(lblUsuario, gbc);
+
+	    gbc.gridx = 1;
+	    panelLogin.add(txtUsuario, gbc);
+
+	    // Contraseña
+	    gbc.gridx = 0;
+	    gbc.gridy = 1;
+	    panelLogin.add(lblContrasena, gbc);
+
+	    gbc.gridx = 1;
+	    panelLogin.add(txtContrasena, gbc);
+
+	    // Botón de login
+	    gbc.gridx = 0;
+	    gbc.gridy = 2;
+	    gbc.gridwidth = 2;
+	    panelLogin.add(btnLogear, gbc);
+
+	    // Ventana de login
+	    login.setContentPane(panelLogin);
+	    login.setSize(400, 200);
+	    login.setLocationRelativeTo(null);
+	    login.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+	    // Ventana de error login
+	    errorLog.setLayout(new BorderLayout());
+	    errorLog.add(mensajeFB, BorderLayout.CENTER);
+	    errorLog.setSize(250, 100);
+	    errorLog.setLocationRelativeTo(null);
+	    errorLog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+	    login.setVisible(true);
 	}
 
-	private void inicializarMenu() {
-		distribucionPanel.setLayout(new BoxLayout(distribucionPanel, BoxLayout.Y_AXIS));
-		distribucionPanel.setBorder(BorderFactory.createEmptyBorder(20, 100, 20, 100));
-		distribucionPanel.add(lblTitulo);
-		distribucionPanel.add(btnNuevaPartida);
-		distribucionPanel.add(Box.createVerticalStrut(10));
-		distribucionPanel.add(btnRanking);
-		distribucionPanel.add(Box.createVerticalStrut(10));
-		distribucionPanel.add(btnAyuda);
-		distribucionPanel.add(Box.createVerticalStrut(10));
-		distribucionPanel.add(btnSalir);
+	public void inicializarMenu() {
+	    // Fuente para título y botones
+	    Font fuenteTitulo = new Font("Wrecked Ship", Font.BOLD, 42);
+	    Font fuenteBoton = new Font("Arial", Font.BOLD, 20);
 
-		menuPrincipal.add(distribucionPanel);
-		menuPrincipal.setSize(800, 400);
-		menuPrincipal.setLocationRelativeTo(null);
-		menuPrincipal.setVisible(true);
+	    // Estilos de botones
+	    JButton[] botones = {btnNuevaPartida, btnRanking, btnAyuda, btnSalir};
+	    for (int i = 0; i < botones.length; i++) {
+	        botones[i].setFont(fuenteBoton);
+	        botones[i].setBackground(new Color(30, 144, 255)); // Azul moderno
+	        botones[i].setForeground(Color.WHITE);             // Texto blanco
+	        botones[i].setPreferredSize(new Dimension(200, 40));
+	    }
 
+	    lblTitulo.setFont(fuenteTitulo);
+	    lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+	    // Panel central con diseño vertical
+	    JPanel panelCentral = new JPanel();
+	    panelCentral.setLayout(new BoxLayout(panelCentral, BoxLayout.Y_AXIS));
+	    panelCentral.setBackground(Color.WHITE);
+	    panelCentral.setBorder(BorderFactory.createEmptyBorder(40, 50, 40, 50));
+
+	    panelCentral.add(lblTitulo);
+	    panelCentral.add(Box.createVerticalStrut(40));
+
+	    for (JButton boton : botones) {
+	        JPanel botonWrapper = new JPanel(); // Para centrar cada botón
+	        botonWrapper.setBackground(Color.WHITE);
+	        botonWrapper.add(boton);
+	        panelCentral.add(botonWrapper);
+	        panelCentral.add(Box.createVerticalStrut(20));
+	    }
+
+	    // Centrado absoluto
+	    menuPrincipal.getContentPane().setLayout(new GridBagLayout());
+	    menuPrincipal.getContentPane().setBackground(Color.WHITE);
+	    menuPrincipal.getContentPane().add(panelCentral);
+
+	    menuPrincipal.setSize(800, 500);
+	    menuPrincipal.setLocationRelativeTo(null);
+	    menuPrincipal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+	    menuPrincipal.setVisible(true);
 	}
 
-	private void inicializarNuevaPartida() {
+
+	public void inicializarNuevaPartida() {
 		// Cargar la imagen (usa tu método 'caja.getImage' si funciona correctamente)
 		imagen = caja.getImage("./tablero.png");
 
 		// Crear panel personalizado que dibuja la imagen
-		JPanel panelColocacion = new JPanel() {
+		 panelColocacion = new JPanel() {
 			@Override
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);
@@ -666,8 +770,17 @@ public class Vista {
 		// Establecer el layout y añadir el panel al JFrame
 		nuevaPartida.getContentPane().setLayout(null); // Usamos layout nulo para posicionar manualmente
 		panelColocacion.setBounds(0, 0, 1782, 625); // Usa todo el espacio del JFrame
+		// ⬇️ Creamos el contenedor con CardLayout y añadimos los paneles
+		layout = new CardLayout();
+		contenedorPaneles = new JPanel(layout);
+		contenedorPaneles.setBounds(0, 0, 1782, 625);
 
-		nuevaPartida.getContentPane().add(panelColocacion);
+		contenedorPaneles.add(panelColocacion, "colocacion");
+		contenedorPaneles.add(new JPanel(), "disparo"); // temporal, se sustituye en iniciarDisparos()
+
+		nuevaPartida.getContentPane().setLayout(null); // si quieres mantener posicionamiento absoluto
+		nuevaPartida.getContentPane().add(contenedorPaneles);
+
 		nuevaPartida.setSize(1798, 664);
 		nuevaPartida.setLocationRelativeTo(null); // Centra la ventana
 		nuevaPartida.setVisible(true);
@@ -677,14 +790,18 @@ public class Vista {
 		int indice = rand.nextInt(formacionesCPU.size());
 		return formacionesCPU.get(indice);
 	}
-	private void iniciarDisparos()
+	public void iniciarDisparos()
 	{
 		inicializarFormacionesCPU();
 		List<List<Point>> formacionElegidaCPU = obtenerFormacionAleatoria();
 
 		inicializarImpactos();
 		// Quita el panel anterior
-		nuevaPartida.getContentPane().removeAll();
+		
+		contenedorPaneles.remove(1); // quitamos el panel anterior en la posición de "disparo"
+		contenedorPaneles.add(panelDisparo, "disparo");
+		layout.show(contenedorPaneles, "disparo");
+
 		System.out.println(formacionElegidaCPU);
 
 		imagen = caja.getImage("./tablero.png");
@@ -801,10 +918,11 @@ public class Vista {
 		});
 
 
-		panelDisparo.setBounds(0, 0, 1782, 625);
-		nuevaPartida.getContentPane().add(panelDisparo);
-		nuevaPartida.revalidate(); // actualiza el contenido
-		nuevaPartida.repaint();    // repinta con el nuevo panel
+		// Añadir o reemplazar el panel "disparo" dentro del contenedor con CardLayout
+		contenedorPaneles.remove(1); // Quita el panel anterior "disparo"
+		contenedorPaneles.add(panelDisparo, "disparo");
+		layout.show(contenedorPaneles, "disparo");
+
 
 	}
 
@@ -1243,8 +1361,8 @@ public class Vista {
 	    panelColocacion.repaint();
 
 	    // Mostrar el panel de colocación (nivel básico)
-	    panelDisparo.setVisible(false);
-	    panelColocacion.setVisible(true);
+	    layout.show(contenedorPaneles, "colocacion");
+
 
 	    
 	    //Informar al jugador

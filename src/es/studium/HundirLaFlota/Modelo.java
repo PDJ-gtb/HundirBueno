@@ -51,7 +51,7 @@ public class Modelo
 	public boolean comprobarCredenciales(Connection conexion, String usuario, String clave) {
 
 		boolean credencialesCorrectas= false;
-		String claveEncriptada = hashSha256(clave);
+		
 		sentencia = "SELECT * FROM jugadores WHERE nombreJugador= '"+usuario + "' AND passJugador = SHA2('"+ clave + "',256);";
 
 		try
@@ -69,26 +69,44 @@ public class Modelo
 		}
 		return credencialesCorrectas;
 	}
-	private String hashSha256(String input) {
-        try {
-            MessageDigest md = MessageDigest.getInstance("SHA-256");
-            byte[] messageDigest = md.digest(input.getBytes());
+	
+	public void sumarVictoria(Connection conexion,String usuario) {
+		sentencia= "UPDATE jugadores SET victoriasJugador = victoriasJugador + 1 WHERE nombreJugador ='"+usuario+"';";
+		try
+		{
 
-            // Convert byte array into signum representation
-            BigInteger no = new BigInteger(1, messageDigest);
+			System.out.println(sentencia);
+			statement=conexion.createStatement();
+			
+			statement.executeUpdate(sentencia);
+			
+		} catch (SQLException e)
+		{
+			
+			e.printStackTrace();
+		}
 
-            // Convert message digest into hex value
-            StringBuilder hashtext = new StringBuilder(no.toString(16));
+	}
+	public ResultSet obtenerRanking(Connection conexion)
+	{
+	    ResultSet resultado = null;
+	    String consulta = "SELECT nombreJugador, victoriasJugador FROM jugadores ORDER BY victoriasJugador DESC";
 
-            // Add leading zeros to get a 64-character hash
-            while (hashtext.length() < 64) {
-                hashtext.insert(0, '0');
-            }
-            return hashtext.toString();
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
-    }
+	    try
+	    {
+	        statement = conexion.createStatement();
+	        resultado = statement.executeQuery(consulta);
+	    }
+	    catch (SQLException e)
+	    {
+	        e.printStackTrace();
+	    }
+
+	    return resultado;
+	}
+
+	
+	
 }
 
 

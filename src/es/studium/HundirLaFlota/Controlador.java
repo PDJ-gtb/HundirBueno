@@ -1,20 +1,13 @@
 package es.studium.HundirLaFlota;
 
-import java.awt.Color;
-import java.awt.Graphics;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
 import java.sql.Connection;
-import java.util.HashSet;
-import java.util.Set;
-
-import javax.swing.JPanel;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 public class Controlador implements ActionListener, WindowListener {
 	
@@ -171,6 +164,8 @@ public  Controlador (Vista v, Modelo m){
    vista.errorLog.addWindowListener(this);
    vista.login.addWindowListener(this);
    vista.btnNuevaPartida.addActionListener(this);
+   vista.btnRanking.addActionListener(this);
+
     }
 
 
@@ -237,6 +232,7 @@ public void actionPerformed(ActionEvent e)
 			vista.login.setVisible(false);
 			vista.menuPrincipal.setVisible(true);
 			System.out.println("Datos correctos");
+			vista.inicializarMenu();
 		} 
 		else {
 			vista.errorLog.setVisible(true);
@@ -249,10 +245,35 @@ public void actionPerformed(ActionEvent e)
 		vista.nuevaPartida.setLocationRelativeTo(null);
 		vista.nuevaPartida.toFront();
 		vista.nuevaPartida.setVisible(true);
+		vista.inicializarNuevaPartida();
 		
 
 		System.out.println("Nueva partida");
 	}
+	else if (e.getSource().equals(vista.btnRanking)) {
+		 if (vista.modeloRanking == null) {
+		        vista.inicializarRanking(); // ✅ Solo la primera vez
+		    }
+	    Connection conexion = modelo.conectar();
+	    vista.modeloRanking.setRowCount(0); // Limpiar tabla por si acaso
+
+	    try {
+	        ResultSet rs = modelo.obtenerRanking(conexion);
+
+	        while (rs != null && rs.next()) {
+	            String nombre = rs.getString("nombreJugador");
+	            int victorias = rs.getInt("victoriasJugador");
+	            vista.modeloRanking.addRow(new Object[]{ nombre, victorias });
+	        }
+
+	    } catch (SQLException ex) {
+	        ex.printStackTrace();
+	    }
+
+	    modelo.desconectar(conexion);
+	    vista.rankingFrame.setVisible(true);
+	}
+
 }
 }
    
