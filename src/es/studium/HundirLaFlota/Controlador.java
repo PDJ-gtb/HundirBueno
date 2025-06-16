@@ -165,6 +165,9 @@ public  Controlador (Vista v, Modelo m){
    vista.login.addWindowListener(this);
    vista.btnNuevaPartida.addActionListener(this);
    vista.btnRanking.addActionListener(this);
+   vista.btnSalir.addActionListener(this);
+   vista.menuPrincipal.addWindowListener(this);
+
 
     }
 
@@ -184,6 +187,10 @@ public void windowClosing(WindowEvent e)
 	}
 	else if (e.getSource().equals(vista.errorLog)) {
 		vista.errorLog.setVisible(false);
+	}
+	else if (e.getSource().equals(vista.menuPrincipal)) {
+	    // Aquí puedes guardar estado si quieres, o simplemente cerrar
+	    System.exit(0); // O usar vista.menuPrincipal.dispose(); si no quieres terminar la app
 	}
 }
 
@@ -273,6 +280,19 @@ public void actionPerformed(ActionEvent e)
 	    modelo.desconectar(conexion);
 	    vista.rankingFrame.setVisible(true);
 	}
+	else if (e.getSource().equals(vista.btnSalir)) {
+	    int opcion = javax.swing.JOptionPane.showConfirmDialog(
+	        vista.menuPrincipal,
+	        "¿Estás seguro de que quieres salir?",
+	        "Confirmar salida",
+	        javax.swing.JOptionPane.YES_NO_OPTION
+	    );
+
+	    if (opcion == javax.swing.JOptionPane.YES_OPTION) {
+	        vista.menuPrincipal.dispatchEvent(new WindowEvent(vista.menuPrincipal, WindowEvent.WINDOW_CLOSING));
+	    }
+	}
+
 
 }
 }

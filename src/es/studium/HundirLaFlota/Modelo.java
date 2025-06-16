@@ -1,8 +1,5 @@
 package es.studium.HundirLaFlota;
 
-import java.math.BigInteger;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -13,8 +10,8 @@ public class Modelo
 {
 	String driver = "com.mysql.cj.jdbc.Driver";
 	String url = "jdbc:mysql://localhost:3306/tiro_al_barco";
-	String login = "adminBueno";
-	String password = "Studium2025#";
+	String login = "root";
+	String password = "Studium2025";
 	String sentencia = "";
 	Connection connection = null;
 	Statement statement = null;

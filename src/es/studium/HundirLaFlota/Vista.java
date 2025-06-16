@@ -1,7 +1,6 @@
 package es.studium.HundirLaFlota;
 
 import java.awt.BorderLayout;
-import java.awt.Button;
 import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Component;
@@ -21,6 +20,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -28,6 +28,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import javax.sound.sampled.AudioInputStream;
+import javax.sound.sampled.AudioSystem;
+import javax.sound.sampled.Clip;
+import javax.sound.sampled.FloatControl;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.BoxLayout;
@@ -534,8 +538,17 @@ public class Vista {
 
 	public void inicializarLogin() {
 	    // Panel principal para login
-	    JPanel panelLogin = new JPanel(new GridBagLayout());
-	    panelLogin.setBackground(Color.WHITE); // Fondo limpio
+		Image imagenFondoLogin = caja.getImage("fondoLoginMenu.png");
+
+	    JPanel panelLogin = new JPanel(new GridBagLayout()) {
+	        @Override
+	        protected void paintComponent(Graphics g) {
+	            super.paintComponent(g);
+	            if (imagenFondoLogin != null) {
+	                g.drawImage(imagenFondoLogin, 0, 0, getWidth(), getHeight(), this);
+	            }
+	        }
+	    };
 
 	    GridBagConstraints gbc = new GridBagConstraints();
 	    gbc.insets = new Insets(10, 10, 10, 10);
@@ -597,9 +610,18 @@ public class Vista {
 	    lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
 
 	    // Panel central con diseño vertical
-	    JPanel panelCentral = new JPanel();
+	    Image imagenFondoMenu = caja.getImage("./fondoLoginMenu.png");
+
+	    JPanel panelCentral = new JPanel() {
+	        @Override
+	        protected void paintComponent(Graphics g) {
+	            super.paintComponent(g);
+	            if (imagenFondoMenu != null) {
+	                g.drawImage(imagenFondoMenu, 0, 0, getWidth(), getHeight(), this);
+	            }
+	        }
+	    };
 	    panelCentral.setLayout(new BoxLayout(panelCentral, BoxLayout.Y_AXIS));
-	    panelCentral.setBackground(Color.WHITE);
 	    panelCentral.setBorder(BorderFactory.createEmptyBorder(40, 50, 40, 50));
 
 	    panelCentral.add(lblTitulo);
@@ -622,6 +644,8 @@ public class Vista {
 	    menuPrincipal.setLocationRelativeTo(null);
 	    menuPrincipal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 	    menuPrincipal.setVisible(true);
+	    
+	    reproducirSonidoMenu();
 	}
 
 
@@ -1367,6 +1391,25 @@ public class Vista {
 	    
 	    //Informar al jugador
 	    JOptionPane.showMessageDialog(panelColocacion, "Coloca tus barcos en el tablero izquierdo.");
+	}
+	
+	private void reproducirSonidoMenu() {
+	    try {
+	        File sonido = new File("./musicaMenu.wav");
+	        AudioInputStream audioStream = AudioSystem.getAudioInputStream(sonido);
+	        Clip clip = AudioSystem.getClip();
+	        clip.open(audioStream);
+
+	        // Controlar volumen
+	        FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+	        float volumenDeseado = 0.7f; // 70%
+	        float dB = (float) (20.0 * Math.log10(volumenDeseado));
+	        gainControl.setValue(dB);
+
+	        clip.start();
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	    }
 	}
 
 
