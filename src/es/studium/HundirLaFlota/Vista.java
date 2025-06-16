@@ -23,6 +23,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
 import java.io.IOException;
+import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -145,9 +146,9 @@ public class Vista {
 
 
 
-	
-	
-	
+
+
+
 	//  RANKING
 	public JFrame rankingFrame = new JFrame("Ranking de Jugadores");
 	public JTable tablaRanking;
@@ -157,9 +158,9 @@ public class Vista {
 
 
 		inicializarLogin();
-		
-		
-		
+
+
+
 		// COORDENADAS DE TOODO EL TABLERO
 		coordenadasBarco[0] = new Point(111, 97);   // A1
 		coordenadasBarco[1] = new Point(177, 97);   // A2
@@ -508,18 +509,18 @@ public class Vista {
 	}
 
 	public void inicializarRanking() {
-	    String[] columnas = { "Jugador", "Victorias" };
-	    modeloRanking = new DefaultTableModel(columnas, 0);
-	    tablaRanking = new JTable(modeloRanking);
+		String[] columnas = { "Jugador", "Victorias" };
+		modeloRanking = new DefaultTableModel(columnas, 0);
+		tablaRanking = new JTable(modeloRanking);
 
-	    tablaRanking.setFillsViewportHeight(true);
-	    tablaRanking.setRowHeight(25);
-	    tablaRanking.setEnabled(false);
+		tablaRanking.setFillsViewportHeight(true);
+		tablaRanking.setRowHeight(25);
+		tablaRanking.setEnabled(false);
 
-	    JScrollPane scroll = new JScrollPane(tablaRanking);
-	    rankingFrame.setSize(400, 300);
-	    rankingFrame.setLocationRelativeTo(null);
-	    rankingFrame.add(scroll);
+		JScrollPane scroll = new JScrollPane(tablaRanking);
+		rankingFrame.setSize(400, 300);
+		rankingFrame.setLocationRelativeTo(null);
+		rankingFrame.add(scroll);
 	}
 
 
@@ -539,127 +540,127 @@ public class Vista {
 
 
 	public void inicializarLogin() {
-	    // Panel principal para login
+		// Panel principal para login
 		Image imagenFondoLogin = caja.getImage("fondoLoginMenu.png");
 
-	    JPanel panelLogin = new JPanel(new GridBagLayout()) {
-	        @Override
-	        protected void paintComponent(Graphics g) {
-	            super.paintComponent(g);
-	            if (imagenFondoLogin != null) {
-	                g.drawImage(imagenFondoLogin, 0, 0, getWidth(), getHeight(), this);
-	            }
-	        }
-	    };
+		JPanel panelLogin = new JPanel(new GridBagLayout()) {
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				if (imagenFondoLogin != null) {
+					g.drawImage(imagenFondoLogin, 0, 0, getWidth(), getHeight(), this);
+				}
+			}
+		};
 
-	    GridBagConstraints gbc = new GridBagConstraints();
-	    gbc.insets = new Insets(10, 10, 10, 10);
-	    gbc.fill = GridBagConstraints.HORIZONTAL;
+		GridBagConstraints gbc = new GridBagConstraints();
+		gbc.insets = new Insets(10, 10, 10, 10);
+		gbc.fill = GridBagConstraints.HORIZONTAL;
 
-	    // Usuario
-	    gbc.gridx = 0;
-	    gbc.gridy = 0;
-	    panelLogin.add(lblUsuario, gbc);
+		// Usuario
+		gbc.gridx = 0;
+		gbc.gridy = 0;
+		panelLogin.add(lblUsuario, gbc);
 
-	    gbc.gridx = 1;
-	    panelLogin.add(txtUsuario, gbc);
+		gbc.gridx = 1;
+		panelLogin.add(txtUsuario, gbc);
 
-	    // Contraseña
-	    gbc.gridx = 0;
-	    gbc.gridy = 1;
-	    panelLogin.add(lblContrasena, gbc);
+		// Contraseña
+		gbc.gridx = 0;
+		gbc.gridy = 1;
+		panelLogin.add(lblContrasena, gbc);
 
-	    gbc.gridx = 1;
-	    panelLogin.add(txtContrasena, gbc);
+		gbc.gridx = 1;
+		panelLogin.add(txtContrasena, gbc);
 
-	    // Botón de login
-	    gbc.gridx = 0;
-	    gbc.gridy = 2;
-	    gbc.gridwidth = 2;
-	    panelLogin.add(btnLogear, gbc);
+		// Botón de login
+		gbc.gridx = 0;
+		gbc.gridy = 2;
+		gbc.gridwidth = 2;
+		panelLogin.add(btnLogear, gbc);
 
-	    // Ventana de login
-	    login.setContentPane(panelLogin);
-	    login.setSize(400, 200);
-	    login.setLocationRelativeTo(null);
-	    login.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		// Ventana de login
+		login.setContentPane(panelLogin);
+		login.setSize(400, 200);
+		login.setLocationRelativeTo(null);
+		login.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-	    // Ventana de error login
-	    errorLog.setLayout(new BorderLayout());
-	    errorLog.add(mensajeFB, BorderLayout.CENTER);
-	    errorLog.setSize(250, 100);
-	    errorLog.setLocationRelativeTo(null);
-	    errorLog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+		// Ventana de error login
+		errorLog.setLayout(new BorderLayout());
+		errorLog.add(mensajeFB, BorderLayout.CENTER);
+		errorLog.setSize(250, 100);
+		errorLog.setLocationRelativeTo(null);
+		errorLog.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-	    login.setVisible(true);
+		login.setVisible(true);
 	}
 
 	public void inicializarMenu() {
-	    // Fuente para título y botones
+		// Fuente para título y botones
 		Font fuenteTitulo = cargarFuentePersonalizada("./font/Warzone.ttf", 42f, Font.BOLD);
 		Font fuenteBoton = cargarFuentePersonalizada("./font/Warzone.ttf", 12f, Font.BOLD);
 
-	    // Estilos de botones
-	    JButton[] botones = {btnNuevaPartida, btnRanking, btnAyuda, btnSalir};
-	    for (int i = 0; i < botones.length; i++) {
-	        botones[i].setFont(fuenteBoton);
-	        botones[i].setBackground(new Color(30, 144, 255)); // Azul moderno
-	        botones[i].setForeground(Color.WHITE);             // Texto blanco
-	        botones[i].setPreferredSize(new Dimension(200, 40));
-	    }
+		// Estilos de botones
+		JButton[] botones = {btnNuevaPartida, btnRanking, btnAyuda, btnSalir};
+		for (int i = 0; i < botones.length; i++) {
+			botones[i].setFont(fuenteBoton);
+			botones[i].setBackground(new Color(30, 144, 255)); // Azul moderno
+			botones[i].setForeground(Color.WHITE);             // Texto blanco
+			botones[i].setPreferredSize(new Dimension(200, 40));
+		}
 
-	    lblTitulo.setFont(fuenteTitulo);
-	    lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
+		lblTitulo.setFont(fuenteTitulo);
+		lblTitulo.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-	    // Panel central con diseño vertical
-	    Image imagenFondoMenu = caja.getImage("./fondoLoginMenu.png");
+		// Panel central con diseño vertical
+		Image imagenFondoMenu = caja.getImage("./fondoLoginMenu.png");
 
-	    JPanel panelCentral = new JPanel() {
-	        @Override
-	        protected void paintComponent(Graphics g) {
-	            super.paintComponent(g);
-	            if (imagenFondoMenu != null) {
-	                g.drawImage(imagenFondoMenu, 0, 0, getWidth(), getHeight(), this);
-	            }
-	        }
-	    };
-	    panelCentral.setLayout(new BoxLayout(panelCentral, BoxLayout.Y_AXIS));
-	    panelCentral.setBorder(BorderFactory.createEmptyBorder(40, 50, 40, 50));
+		JPanel panelCentral = new JPanel() {
+			@Override
+			protected void paintComponent(Graphics g) {
+				super.paintComponent(g);
+				if (imagenFondoMenu != null) {
+					g.drawImage(imagenFondoMenu, 0, 0, getWidth(), getHeight(), this);
+				}
+			}
+		};
+		panelCentral.setLayout(new BoxLayout(panelCentral, BoxLayout.Y_AXIS));
+		panelCentral.setBorder(BorderFactory.createEmptyBorder(40, 50, 40, 50));
 
-	    panelCentral.add(lblTitulo);
-	    panelCentral.add(Box.createVerticalStrut(40));
+		panelCentral.add(lblTitulo);
+		panelCentral.add(Box.createVerticalStrut(40));
 
-	    for (JButton boton : botones) {
-	        JPanel botonWrapper = new JPanel(); // Para centrar cada botón
-	        botonWrapper.setBackground(Color.WHITE);
-	        botonWrapper.add(boton);
-	        panelCentral.add(botonWrapper);
-	        panelCentral.add(Box.createVerticalStrut(20));
-	    }
+		for (JButton boton : botones) {
+			JPanel botonWrapper = new JPanel(); // Para centrar cada botón
+			botonWrapper.setBackground(Color.WHITE);
+			botonWrapper.add(boton);
+			panelCentral.add(botonWrapper);
+			panelCentral.add(Box.createVerticalStrut(20));
+		}
 
-	    // Centrado absoluto
-	    menuPrincipal.getContentPane().setLayout(new GridBagLayout());
-	    menuPrincipal.getContentPane().setBackground(Color.WHITE);
-	    menuPrincipal.getContentPane().add(panelCentral);
+		// Centrado absoluto
+		menuPrincipal.getContentPane().setLayout(new GridBagLayout());
+		menuPrincipal.getContentPane().setBackground(Color.WHITE);
+		menuPrincipal.getContentPane().add(panelCentral);
 
-	    menuPrincipal.setSize(800, 500);
-	    menuPrincipal.setLocationRelativeTo(null);
-	    menuPrincipal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-	    menuPrincipal.setVisible(true);
-	    
-	    reproducirSonidoMenu();
+		menuPrincipal.setSize(800, 500);
+		menuPrincipal.setLocationRelativeTo(null);
+		menuPrincipal.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+		menuPrincipal.setVisible(true);
+
+		reproducirSonidoMenu();
 	}
 
 
 	public void inicializarNuevaPartida() {
-		
+
 		Font fuenteNuevaPartida = cargarFuentePersonalizada("./font/Warzone.ttf", 22f, Font.BOLD);
-		
+
 		// Cargar la imagen (usa tu método 'caja.getImage' si funciona correctamente)
 		imagen = caja.getImage("./tablero.png");
 
 		// Crear panel personalizado que dibuja la imagen
-		 panelColocacion = new JPanel() {
+		panelColocacion = new JPanel() {
 			@Override
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);
@@ -809,13 +810,13 @@ public class Vista {
 	public void iniciarDisparos()
 	{
 		Font fuenteNuevaPartida = cargarFuentePersonalizada("./font/Warzone.ttf", 22f, Font.BOLD);
-		
+
 		inicializarFormacionesCPU();
 		List<List<Point>> formacionElegidaCPU = obtenerFormacionAleatoria();
 
 		inicializarImpactos();
 		// Quita el panel anterior
-		
+
 		contenedorPaneles.remove(1); // quitamos el panel anterior en la posición de "disparo"
 		contenedorPaneles.add(panelDisparo, "disparo");
 		layout.show(contenedorPaneles, "disparo");
@@ -1246,6 +1247,11 @@ public class Vista {
 		if (puntosUsuario >= puntosMaximos) {
 			juegoTerminado = true;
 			JOptionPane.showMessageDialog(panelDisparo, "🎉 ¡Has ganado la partida!");
+			Modelo modelo = new Modelo();
+			Connection conexion = null;
+			conexion=	modelo.conectar();
+			modelo.sumarVictoria(conexion, txtUsuario.getText());
+
 		} else if (puntosCPU >= puntosMaximos) {
 			juegoTerminado = true;
 			JOptionPane.showMessageDialog(panelDisparo, "💥 Has perdido contra la CPU.");
@@ -1362,64 +1368,64 @@ public class Vista {
 	}
 
 	public void reiniciarPartida() {
-	    // Limpiar todos los datos de juego
-	    disparosJugador.clear();
-	    disparosCPU.clear();
-	    aciertosJugador.clear();
-	    aciertosCPU.clear();
-	    barcosUsuario.clear();
-	    barcosCPU = null;
-	    barcoActual.clear();
+		// Limpiar todos los datos de juego
+		disparosJugador.clear();
+		disparosCPU.clear();
+		aciertosJugador.clear();
+		aciertosCPU.clear();
+		barcosUsuario.clear();
+		barcosCPU = null;
+		barcoActual.clear();
 
-	    // Resetear estado del juego
-	    puntosUsuario = 0;
-	    puntosCPU = 0;
-	    juegoTerminado = false;
-	    turnoJugador = true;
-	    puntoExplosion = null;
-	    radioExplosion = 0;
-	    indiceBarco = 0;
+		// Resetear estado del juego
+		puntosUsuario = 0;
+		puntosCPU = 0;
+		juegoTerminado = false;
+		turnoJugador = true;
+		puntoExplosion = null;
+		radioExplosion = 0;
+		indiceBarco = 0;
 
-	    // Repintar ambos paneles para limpiar lo visible
-	    panelDisparo.repaint();
-	    panelColocacion.repaint();
+		// Repintar ambos paneles para limpiar lo visible
+		panelDisparo.repaint();
+		panelColocacion.repaint();
 
-	    // Mostrar el panel de colocación (nivel básico)
-	    layout.show(contenedorPaneles, "colocacion");
+		// Mostrar el panel de colocación (nivel básico)
+		layout.show(contenedorPaneles, "colocacion");
 
 
-	    
-	    //Informar al jugador
-	    JOptionPane.showMessageDialog(panelColocacion, "Coloca tus barcos en el tablero izquierdo.");
+
+		//Informar al jugador
+		JOptionPane.showMessageDialog(panelColocacion, "Coloca tus barcos en el tablero izquierdo.");
 	}
-	
+
 	private void reproducirSonidoMenu() {
-	    try {
-	        File sonido = new File("./musicaMenu.wav");
-	        AudioInputStream audioStream = AudioSystem.getAudioInputStream(sonido);
-	        Clip clip = AudioSystem.getClip();
-	        clip.open(audioStream);
+		try {
+			File sonido = new File("./musicaMenu.wav");
+			AudioInputStream audioStream = AudioSystem.getAudioInputStream(sonido);
+			Clip clip = AudioSystem.getClip();
+			clip.open(audioStream);
 
-	        // Controlar volumen
-	        FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-	        float volumenDeseado = 0.7f; // 70%
-	        float dB = (float) (20.0 * Math.log10(volumenDeseado));
-	        gainControl.setValue(dB);
+			// Controlar volumen
+			FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+			float volumenDeseado = 0.7f; // 70%
+			float dB = (float) (20.0 * Math.log10(volumenDeseado));
+			gainControl.setValue(dB);
 
-	        clip.start();
-	    } catch (Exception e) {
-	        e.printStackTrace();
-	    }
+			clip.start();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	private Font cargarFuentePersonalizada(String ruta, float tamanio, int estilo) {
-	    try {
-	        Font fuente = Font.createFont(Font.TRUETYPE_FONT, new File(ruta));
-	        return fuente.deriveFont(estilo, tamanio);
-	    } catch (FontFormatException | IOException e) {
-	        e.printStackTrace();
-	        return new Font("Arial", estilo, (int) tamanio); // Fuente de respaldo
-	    }
+		try {
+			Font fuente = Font.createFont(Font.TRUETYPE_FONT, new File(ruta));
+			return fuente.deriveFont(estilo, tamanio);
+		} catch (FontFormatException | IOException e) {
+			e.printStackTrace();
+			return new Font("Arial", estilo, (int) tamanio); // Fuente de respaldo
+		}
 	}
 
 

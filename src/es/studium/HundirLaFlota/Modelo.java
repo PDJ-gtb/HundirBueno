@@ -8,10 +8,12 @@ import java.sql.Statement;
 
 public class Modelo
 {
+	// login de Paco = adminBueno
+	// pass de Paco = Studium2025#
 	String driver = "com.mysql.cj.jdbc.Driver";
 	String url = "jdbc:mysql://localhost:3306/tiro_al_barco";
-	String login = "root";
-	String password = "Studium2025";
+	String login = "adminBueno";
+	String password = "Studium2025#";
 	String sentencia = "";
 	Connection connection = null;
 	Statement statement = null;
