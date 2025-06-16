@@ -74,7 +74,8 @@ public class Vista {
 
 	// Coordenadas para las 100 celdas (A1 a J10)
 	Point[] coordenadasBarco = new Point[100];
-	Point[] coordenadasTableroUsuario = new Point[50];
+	Point[] coordenadasTableroCPU = new Point[100];
+	Point[] coordenadasTableroUsuario = new Point[100];
 	// Para rellenar las casillas
 	// 0-4 (5) 5-8 (4) 9-11 (3) 12-14 (3) 15-16 (2)   POSICIONES EN EL ARRAY DE LOS BARCOS
 	List<Point> puntosClicados = new ArrayList<>();
@@ -220,6 +221,121 @@ public class Vista {
 		coordenadasBarco[97] = new Point(573, 529);  // J8
 		coordenadasBarco[98] = new Point(639, 529);  // J9
 		coordenadasBarco[99] = new Point(705, 529);  // J10
+		
+		
+		//TABLERO CPU
+		
+		coordenadasTableroCPU[0] = new Point(1085, 97);   // A1
+		coordenadasTableroCPU[1] = new Point(1151, 97);   // A2
+		coordenadasTableroCPU[2] = new Point(1217, 97);   // A3
+		coordenadasTableroCPU[3] = new Point(1283, 97);   // A4
+		coordenadasTableroCPU[4] = new Point(1349, 97);   // A5
+		coordenadasTableroCPU[5] = new Point(1415, 97);   // A6
+		coordenadasTableroCPU[6] = new Point(1481, 97);   // A7
+		coordenadasTableroCPU[7] = new Point(1547, 97);   // A8
+		coordenadasTableroCPU[8] = new Point(1613, 97);   // A9
+		coordenadasTableroCPU[9] = new Point(1679, 97);   // A10
+
+		coordenadasTableroCPU[10] = new Point(1085, 145);  // B1
+		coordenadasTableroCPU[11] = new Point(1151, 145);  // B2
+		coordenadasTableroCPU[12] = new Point(1217, 145);  // B3
+		coordenadasTableroCPU[13] = new Point(1283, 145);  // B4
+		coordenadasTableroCPU[14] = new Point(1349, 145);  // B5
+		coordenadasTableroCPU[15] = new Point(1415, 145);  // B6
+		coordenadasTableroCPU[16] = new Point(1481, 145);  // B7
+		coordenadasTableroCPU[17] = new Point(1547, 145);  // B8
+		coordenadasTableroCPU[18] = new Point(1613, 145);  // B9
+		coordenadasTableroCPU[19] = new Point(1679, 145);  // B10
+
+		coordenadasTableroCPU[20] = new Point(1085, 193);  // C1
+		coordenadasTableroCPU[21] = new Point(1151, 193);  // C2
+		coordenadasTableroCPU[22] = new Point(1217, 193);  // C3
+		coordenadasTableroCPU[23] = new Point(1283, 193);  // C4
+		coordenadasTableroCPU[24] = new Point(1349, 193);  // C5
+		coordenadasTableroCPU[25] = new Point(1415, 193);  // C6
+		coordenadasTableroCPU[26] = new Point(1481, 193);  // C7
+		coordenadasTableroCPU[27] = new Point(1547, 193);  // C8
+		coordenadasTableroCPU[28] = new Point(1613, 193);  // C9
+		coordenadasTableroCPU[29] = new Point(1679, 193);  // C10
+
+		coordenadasTableroCPU[30] = new Point(1085, 241);  // D1
+		coordenadasTableroCPU[31] = new Point(1151, 241);  // D2
+		coordenadasTableroCPU[32] = new Point(1217, 241);  // D3
+		coordenadasTableroCPU[33] = new Point(1283, 241);  // D4
+		coordenadasTableroCPU[34] = new Point(1349, 241);  // D5
+		coordenadasTableroCPU[35] = new Point(1415, 241);  // D6
+		coordenadasTableroCPU[36] = new Point(1481, 241);  // D7
+		coordenadasTableroCPU[37] = new Point(1547, 241);  // D8
+		coordenadasTableroCPU[38] = new Point(1613, 241);  // D9
+		coordenadasTableroCPU[39] = new Point(1679, 241);  // D10
+
+		coordenadasTableroCPU[40] = new Point(1085, 289);  // E1
+		coordenadasTableroCPU[41] = new Point(1151, 289);  // E2
+		coordenadasTableroCPU[42] = new Point(1217, 289);  // E3
+		coordenadasTableroCPU[43] = new Point(1283, 289);  // E4
+		coordenadasTableroCPU[44] = new Point(1349, 289);  // E5
+		coordenadasTableroCPU[45] = new Point(1415, 289);  // E6
+		coordenadasTableroCPU[46] = new Point(1481, 289);  // E7
+		coordenadasTableroCPU[47] = new Point(1547, 289);  // E8
+		coordenadasTableroCPU[48] = new Point(1613, 289);  // E9
+		coordenadasTableroCPU[49] = new Point(1679, 289);  // E10
+
+		coordenadasTableroCPU[50] = new Point(1085, 337);  // F1
+		coordenadasTableroCPU[51] = new Point(1151, 337);  // F2
+		coordenadasTableroCPU[52] = new Point(1217, 337);  // F3
+		coordenadasTableroCPU[53] = new Point(1283, 337);  // F4
+		coordenadasTableroCPU[54] = new Point(1349, 337);  // F5
+		coordenadasTableroCPU[55] = new Point(1415, 337);  // F6
+		coordenadasTableroCPU[56] = new Point(1481, 337);  // F7
+		coordenadasTableroCPU[57] = new Point(1547, 337);  // F8
+		coordenadasTableroCPU[58] = new Point(1613, 337);  // F9
+		coordenadasTableroCPU[59] = new Point(1679, 337);  // F10
+
+		coordenadasTableroCPU[60] = new Point(1085, 385);  // G1
+		coordenadasTableroCPU[61] = new Point(1151, 385);  // G2
+		coordenadasTableroCPU[62] = new Point(1217, 385);  // G3
+		coordenadasTableroCPU[63] = new Point(1283, 385);  // G4
+		coordenadasTableroCPU[64] = new Point(1349, 385);  // G5
+		coordenadasTableroCPU[65] = new Point(1415, 385);  // G6
+		coordenadasTableroCPU[66] = new Point(1481, 385);  // G7
+		coordenadasTableroCPU[67] = new Point(1547, 385);  // G8
+		coordenadasTableroCPU[68] = new Point(1613, 385);  // G9
+		coordenadasTableroCPU[69] = new Point(1679, 385);  // G10
+
+		coordenadasTableroCPU[70] = new Point(1085, 433);  // H1
+		coordenadasTableroCPU[71] = new Point(1151, 433);  // H2
+		coordenadasTableroCPU[72] = new Point(1217, 433);  // H3
+		coordenadasTableroCPU[73] = new Point(1283, 433);  // H4
+		coordenadasTableroCPU[74] = new Point(1349, 433);  // H5
+		coordenadasTableroCPU[75] = new Point(1415, 433);  // H6
+		coordenadasTableroCPU[76] = new Point(1481, 433);  // H7
+		coordenadasTableroCPU[77] = new Point(1547, 433);  // H8
+		coordenadasTableroCPU[78] = new Point(1613, 433);  // H9
+		coordenadasTableroCPU[79] = new Point(1679, 433);  // H10
+
+		coordenadasTableroCPU[80] = new Point(1085, 481);  // I1
+		coordenadasTableroCPU[81] = new Point(1151, 481);  // I2
+		coordenadasTableroCPU[82] = new Point(1217, 481);  // I3
+		coordenadasTableroCPU[83] = new Point(1283, 481);  // I4
+		coordenadasTableroCPU[84] = new Point(1349, 481);  // I5
+		coordenadasTableroCPU[85] = new Point(1415, 481);  // I6
+		coordenadasTableroCPU[86] = new Point(1481, 481);  // I7
+		coordenadasTableroCPU[87] = new Point(1547, 481);  // I8
+		coordenadasTableroCPU[88] = new Point(1613, 481);  // I9
+		coordenadasTableroCPU[89] = new Point(1679, 481);  // I10
+
+		coordenadasTableroCPU[90] = new Point(1085, 529);  // J1
+		coordenadasTableroCPU[91] = new Point(1151, 529);  // J2
+		coordenadasTableroCPU[92] = new Point(1217, 529);  // J3
+		coordenadasTableroCPU[93] = new Point(1283, 529);  // J4
+		coordenadasTableroCPU[94] = new Point(1349, 529);  // J5
+		coordenadasTableroCPU[95] = new Point(1415, 529);  // J6
+		coordenadasTableroCPU[96] = new Point(1481, 529);  // J7
+		coordenadasTableroCPU[97] = new Point(1547, 529);  // J8
+		coordenadasTableroCPU[98] = new Point(1613, 529);  // J9
+		coordenadasTableroCPU[99] = new Point(1679, 529);  // J10
+
+
 
 		
 		// TABLERO USUARIO
@@ -279,6 +395,62 @@ public class Vista {
 		coordenadasTableroUsuario[48] = new Point(639, 289);  // E9
 		coordenadasTableroUsuario[49] = new Point(705, 289);  // E10
 
+		coordenadasTableroUsuario[50] = new Point(111, 337);  // F1
+		coordenadasTableroUsuario[51] = new Point(177, 337);  // F2
+		coordenadasTableroUsuario[52] = new Point(243, 337);  // F3
+		coordenadasTableroUsuario[53] = new Point(309, 337);  // F4
+		coordenadasTableroUsuario[54] = new Point(375, 337);  // F5
+		coordenadasTableroUsuario[55] = new Point(441, 337);  // F6
+		coordenadasTableroUsuario[56] = new Point(507, 337);  // F7
+		coordenadasTableroUsuario[57] = new Point(573, 337);  // F8
+		coordenadasTableroUsuario[58] = new Point(639, 337);  // F9
+		coordenadasTableroUsuario[59] = new Point(705, 337);  // F10
+
+		coordenadasTableroUsuario[60] = new Point(111, 385);  // G1
+		coordenadasTableroUsuario[61] = new Point(177, 385);  // G2
+		coordenadasTableroUsuario[62] = new Point(243, 385);  // G3
+		coordenadasTableroUsuario[63] = new Point(309, 385);  // G4
+		coordenadasTableroUsuario[64] = new Point(375, 385);  // G5
+		coordenadasTableroUsuario[65] = new Point(441, 385);  // G6
+		coordenadasTableroUsuario[66] = new Point(507, 385);  // G7
+		coordenadasTableroUsuario[67] = new Point(573, 385);  // G8
+		coordenadasTableroUsuario[68] = new Point(639, 385);  // G9
+		coordenadasTableroUsuario[69] = new Point(705, 385);  // G10
+
+		coordenadasTableroUsuario[70] = new Point(111, 433);  // H1
+		coordenadasTableroUsuario[71] = new Point(177, 433);  // H2
+		coordenadasTableroUsuario[72] = new Point(243, 433);  // H3
+		coordenadasTableroUsuario[73] = new Point(309, 433);  // H4
+		coordenadasTableroUsuario[74] = new Point(375, 433);  // H5
+		coordenadasTableroUsuario[75] = new Point(441, 433);  // H6
+		coordenadasTableroUsuario[76] = new Point(507, 433);  // H7
+		coordenadasTableroUsuario[77] = new Point(573, 433);  // H8
+		coordenadasTableroUsuario[78] = new Point(639, 433);  // H9
+		coordenadasTableroUsuario[79] = new Point(705, 433);  // H10
+
+		coordenadasTableroUsuario[80] = new Point(111, 481);  // I1
+		coordenadasTableroUsuario[81] = new Point(177, 481);  // I2
+		coordenadasTableroUsuario[82] = new Point(243, 481);  // I3
+		coordenadasTableroUsuario[83] = new Point(309, 481);  // I4
+		coordenadasTableroUsuario[84] = new Point(375, 481);  // I5
+		coordenadasTableroUsuario[85] = new Point(441, 481);  // I6
+		coordenadasTableroUsuario[86] = new Point(507, 481);  // I7
+		coordenadasTableroUsuario[87] = new Point(573, 481);  // I8
+		coordenadasTableroUsuario[88] = new Point(639, 481);  // I9
+		coordenadasTableroUsuario[89] = new Point(705, 481);  // I10
+
+		coordenadasTableroUsuario[90] = new Point(111, 529);  // J1
+		coordenadasTableroUsuario[91] = new Point(177, 529);  // J2
+		coordenadasTableroUsuario[92] = new Point(243, 529);  // J3
+		coordenadasTableroUsuario[93] = new Point(309, 529);  // J4
+		coordenadasTableroUsuario[94] = new Point(375, 529);  // J5
+		coordenadasTableroUsuario[95] = new Point(441, 529);  // J6
+		coordenadasTableroUsuario[96] = new Point(507, 529);  // J7
+		coordenadasTableroUsuario[97] = new Point(573, 529);  // J8
+		coordenadasTableroUsuario[98] = new Point(639, 529);  // J9
+		coordenadasTableroUsuario[99] = new Point(705, 529);  // J10
+
+
 	}
 
 
@@ -335,7 +507,7 @@ public class Vista {
 
 	private void inicializarNuevaPartida() {
 		// Cargar la imagen (usa tu método 'caja.getImage' si funciona correctamente)
-		imagen = caja.getImage("./imagenTablero.png");
+		imagen = caja.getImage("./tablero.png");
 
 		// Crear panel personalizado que dibuja la imagen
 		JPanel panelNP = new JPanel() {
@@ -344,35 +516,47 @@ public class Vista {
 				super.paintComponent(g);
 				if (imagen != null) {
 					// Dibuja la imagen con tamaño 802x572 desde (0, 0)
-					g.drawImage(imagen, 0, 0, 1250, 625, this);
+					g.drawImage(imagen, 0, 0, 1782, 625, this);
 				}
 
-				Font font = new Font("Call of Ops Duty II", Font.ITALIC | Font.BOLD, 27); 
+				Font font = new Font("Wrecked Ship", Font.ITALIC | Font.BOLD, 25); 
 				g.setFont(font); 
-				g.setColor(new Color(29, 122, 207));
+				g.setColor(Color.black);
 
 				Graphics2D g2 = (Graphics2D) g;
 				FontMetrics fm = g2.getFontMetrics();  // Obtiene las métricas de la fuente actual
 
-				String texto1 = "Almirante";
+				String texto1 = "ALMIRANTE";
 				int anchoTexto1 = fm.stringWidth(texto1);  // Calcula el ancho en píxeles
-				g2.drawString(texto1, 1100 - anchoTexto1 / 2, 90);  // Centrado horizontal
+				g2.drawString(texto1, 890 - anchoTexto1 / 2, 170);  // Centrado horizontal
 
-				String texto2 = "Nombre";
+				String texto2 = "NOMBRE";
 				int anchoTexto2 = fm.stringWidth(texto2);
-				g2.drawString(texto2, 1100 - anchoTexto2 / 2, 120);
+				g2.drawString(texto2, 890 - anchoTexto2 / 2, 195);
 
-				String texto3 = "Barcos Restantes:";
+				String texto3 = "BARCOS";
 				int anchoTexto3 = fm.stringWidth(texto3);
-				g2.drawString(texto3, 1020 - anchoTexto3 / 2, 225);
+				g2.drawString(texto3, 890 - anchoTexto3 / 2, 270);
+				
+				String texto6 = "RESTANTES";
+				int anchoTexto6 = fm.stringWidth(texto6);
+				g2.drawString(texto6, 890 - anchoTexto6 / 2, 295);
 
-				String texto4 = "Puntuación:";
+				String texto4 = "PUNTUACIÓN";
 				int anchoTexto4 = fm.stringWidth(texto4);
-				g2.drawString(texto4, 1020 - anchoTexto4 / 2, 530);
+				g2.drawString(texto4, 890 - anchoTexto4 / 2, 530);
 
-				String texto5 = "1000";
+				String texto5 = "1000 PTS";
 				int anchoTexto5 = fm.stringWidth(texto5);
-				g2.drawString(texto5, 1020 - anchoTexto5 / 2, 560);
+				g2.drawString(texto5, 890 - anchoTexto5 / 2, 555);
+				
+				String textoCPU = "JUGADOR";
+				int anchoTextoCPU = fm.stringWidth(textoCPU);
+				g2.drawString(textoCPU, 410 - anchoTextoCPU / 2, 585);
+				
+				String textoJugador = "CPU";
+				int anchoTextoJugador = fm.stringWidth(textoJugador);
+				g2.drawString(textoJugador, 1386 - anchoTextoJugador / 2, 585);
 
 
 				g.setColor(Color.BLUE);
@@ -462,10 +646,10 @@ public class Vista {
 
 		// Establecer el layout y añadir el panel al JFrame
 		nuevaPartida.getContentPane().setLayout(null); // Usamos layout nulo para posicionar manualmente
-		panelNP.setBounds(0, 0, 1250, 625); // Usa todo el espacio del JFrame
+		panelNP.setBounds(0, 0, 1782, 625); // Usa todo el espacio del JFrame
 
 		nuevaPartida.getContentPane().add(panelNP);
-		nuevaPartida.setSize(1266, 664);
+		nuevaPartida.setSize(1798, 664);
 		nuevaPartida.setLocationRelativeTo(null); // Centra la ventana
 		nuevaPartida.setVisible(true);
 	}
@@ -484,7 +668,7 @@ public class Vista {
 		nuevaPartida.getContentPane().removeAll();
 		System.out.println(formacionElegidaCPU);
 
-		imagen = caja.getImage("./imagenTablero.png");
+		imagen = caja.getImage("./tablero.png");
 
 		// Crea un nuevo panel (puedes usar otra imagen de fondo, otros botones, etc.)
 		panelDisparo = new JPanel() {
@@ -498,12 +682,12 @@ public class Vista {
 				// Aquí puedes dibujar tablero enemigo, disparos, etc.
 				if (imagen != null) {
 					// Dibuja la imagen con tamaño 802x572 desde (0, 0)
-					g.drawImage(imagen, 0, 0, 1250, 625, this);
+					g.drawImage(imagen, 0, 0, 1782, 625, this);
 				}
 
 				Font font = new Font("Call of Ops Duty II", Font.ITALIC | Font.BOLD, 27); 
 				g.setFont(font); 
-				g.setColor(new Color(29, 122, 207));; // o el color que prefieras
+				g.setColor(Color.black);; // o el color que prefieras
 
 				Graphics2D g2 = (Graphics2D) g;
 				FontMetrics fm = g2.getFontMetrics();  // Obtiene las métricas de la fuente actual
@@ -613,11 +797,11 @@ public class Vista {
 
 			@Override
 			public Dimension getPreferredSize() {
-				return new Dimension(1250, 625);
+				return new Dimension(1782, 625);
 			}
 		};
 
-		panelDisparo.setBounds(0, 0, 1250, 625);
+		panelDisparo.setBounds(0, 0, 1782, 625);
 		nuevaPartida.getContentPane().add(panelDisparo);
 		nuevaPartida.revalidate(); // actualiza el contenido
 		nuevaPartida.repaint();    // repinta con el nuevo panel
@@ -824,58 +1008,100 @@ public class Vista {
 		formacionesCPU = new ArrayList<>();
 
 		// Formación 1 (barcos colocados verticalmente y horizontalmente en filas F-J)
-		List<List<Point>> form1 = new ArrayList<>();
-		// Barco 5 casillas (tamaño 5) horizontal en F1-F5 (índices 50 a 54)
-		form1.add(Arrays.asList(
-				coordenadasBarco[50], coordenadasBarco[51], coordenadasBarco[52], 
-				coordenadasBarco[53], coordenadasBarco[54]
-				));
-		// Barco 4 casillas vertical en G3-J3 (índices 62, 72, 82, 92)
-		form1.add(Arrays.asList(
-				coordenadasBarco[62], coordenadasBarco[72], coordenadasBarco[82], coordenadasBarco[92]
-				));
-		// Barco 3 casillas horizontal en H6-H8 (índices 75, 76, 77)
-		form1.add(Arrays.asList(
-				coordenadasBarco[75], coordenadasBarco[76], coordenadasBarco[77]
-				));
-		// Barco 3 casillas vertical en I8-K8 (índices 87, 97, (fuera rango) pero usaremos 97)
-		// Para no salirnos del array usaremos solo I8-J8 (87, 97)
-		form1.add(Arrays.asList(
-				coordenadasBarco[87], coordenadasBarco[97]
-				));
-		// Barco 2 casillas horizontal en J10-I10 (índices 99, 89)
-		form1.add(Arrays.asList(
-				coordenadasBarco[99], coordenadasBarco[89]
-				));
+		List<List<List<Point>>> formacionesCPU = new ArrayList<>();
 
+		// Formación 1
+		List<List<Point>> form1 = new ArrayList<>();
+		form1.add(Arrays.asList(coordenadasTableroCPU[50], coordenadasTableroCPU[51], coordenadasTableroCPU[52], coordenadasTableroCPU[53], coordenadasTableroCPU[54])); // 5 horizontal
+		form1.add(Arrays.asList(coordenadasTableroCPU[62], coordenadasTableroCPU[72], coordenadasTableroCPU[82], coordenadasTableroCPU[92])); // 4 vertical
+		form1.add(Arrays.asList(coordenadasTableroCPU[75], coordenadasTableroCPU[76], coordenadasTableroCPU[77])); // 3 horizontal
+		form1.add(Arrays.asList(coordenadasTableroCPU[87], coordenadasTableroCPU[97], coordenadasTableroCPU[96])); // 3 horizontal (celdas contiguas)
+		form1.add(Arrays.asList(coordenadasTableroCPU[99], coordenadasTableroCPU[89])); // 2 vertical
 		formacionesCPU.add(form1);
 
-		// Formación 2 (barcos colocados diferente)
+		// Formación 2
 		List<List<Point>> form2 = new ArrayList<>();
-		// Barco 5 casillas vertical en F10-J10 (índices 59, 69, 79, 89, 99)
-		form2.add(Arrays.asList(
-				coordenadasBarco[59], coordenadasBarco[69], coordenadasBarco[79], 
-				coordenadasBarco[89], coordenadasBarco[99]
-				));
-		// Barco 4 casillas horizontal en G1-G4 (índices 60, 61, 62, 63)
-		form2.add(Arrays.asList(
-				coordenadasBarco[60], coordenadasBarco[61], coordenadasBarco[62], coordenadasBarco[63]
-				));
-		// Barco 3 casillas vertical en H5-J5 (índices 74, 84, 94)
-		form2.add(Arrays.asList(
-				coordenadasBarco[74], coordenadasBarco[84], coordenadasBarco[94]
-				));
-		// Barco 3 casillas horizontal en I7-I9 (índices 86, 87, 88)
-		form2.add(Arrays.asList(
-				coordenadasBarco[86], coordenadasBarco[87], coordenadasBarco[88]
-				));
-		// Barco 2 casillas horizontal en J1-J2 (índices 90, 91)
-		form2.add(Arrays.asList(
-				coordenadasBarco[90], coordenadasBarco[91]
-				));
-
+		form2.add(Arrays.asList(coordenadasTableroCPU[59], coordenadasTableroCPU[69], coordenadasTableroCPU[79], coordenadasTableroCPU[89], coordenadasTableroCPU[99])); // 5 vertical
+		form2.add(Arrays.asList(coordenadasTableroCPU[60], coordenadasTableroCPU[61], coordenadasTableroCPU[62], coordenadasTableroCPU[63])); // 4 horizontal
+		form2.add(Arrays.asList(coordenadasTableroCPU[74], coordenadasTableroCPU[84], coordenadasTableroCPU[94])); // 3 vertical
+		form2.add(Arrays.asList(coordenadasTableroCPU[86], coordenadasTableroCPU[87], coordenadasTableroCPU[88])); // 3 horizontal
+		form2.add(Arrays.asList(coordenadasTableroCPU[90], coordenadasTableroCPU[91])); // 2 horizontal
 		formacionesCPU.add(form2);
+
+		// Formación 3
+		List<List<Point>> form3 = new ArrayList<>();
+		form3.add(Arrays.asList(coordenadasTableroCPU[0], coordenadasTableroCPU[1], coordenadasTableroCPU[2], coordenadasTableroCPU[3], coordenadasTableroCPU[4])); // 5 horizontal
+		form3.add(Arrays.asList(coordenadasTableroCPU[10], coordenadasTableroCPU[20], coordenadasTableroCPU[30], coordenadasTableroCPU[40])); // 4 vertical
+		form3.add(Arrays.asList(coordenadasTableroCPU[12], coordenadasTableroCPU[13], coordenadasTableroCPU[14])); // 3 horizontal
+		form3.add(Arrays.asList(coordenadasTableroCPU[22], coordenadasTableroCPU[32], coordenadasTableroCPU[42])); // 3 vertical
+		form3.add(Arrays.asList(coordenadasTableroCPU[99], coordenadasTableroCPU[98])); // 2 horizontal
+		formacionesCPU.add(form3);
+
+		// Formación 4
+		List<List<Point>> form4 = new ArrayList<>();
+		form4.add(Arrays.asList(coordenadasTableroCPU[91], coordenadasTableroCPU[92], coordenadasTableroCPU[93], coordenadasTableroCPU[94], coordenadasTableroCPU[95])); // 5 horizontal
+		form4.add(Arrays.asList(coordenadasTableroCPU[50], coordenadasTableroCPU[60], coordenadasTableroCPU[70], coordenadasTableroCPU[80])); // 4 vertical
+		form4.add(Arrays.asList(coordenadasTableroCPU[33], coordenadasTableroCPU[34], coordenadasTableroCPU[35])); // 3 horizontal
+		form4.add(Arrays.asList(coordenadasTableroCPU[41], coordenadasTableroCPU[51], coordenadasTableroCPU[61])); // 3 vertical
+		form4.add(Arrays.asList(coordenadasTableroCPU[5], coordenadasTableroCPU[6])); // 2 horizontal
+		formacionesCPU.add(form4);
+
+		// Formación 5
+		List<List<Point>> form5 = new ArrayList<>();
+		form5.add(Arrays.asList(coordenadasTableroCPU[25], coordenadasTableroCPU[26], coordenadasTableroCPU[27], coordenadasTableroCPU[28], coordenadasTableroCPU[29])); // 5 horizontal
+		form5.add(Arrays.asList(coordenadasTableroCPU[70], coordenadasTableroCPU[71], coordenadasTableroCPU[72], coordenadasTableroCPU[73])); // 4 horizontal
+		form5.add(Arrays.asList(coordenadasTableroCPU[40], coordenadasTableroCPU[50], coordenadasTableroCPU[60])); // 3 vertical
+		form5.add(Arrays.asList(coordenadasTableroCPU[81], coordenadasTableroCPU[82], coordenadasTableroCPU[83])); // 3 horizontal
+		form5.add(Arrays.asList(coordenadasTableroCPU[98], coordenadasTableroCPU[99])); // 2 horizontal
+		formacionesCPU.add(form5);
+
+		// Formación 6
+		List<List<Point>> form6 = new ArrayList<>();
+		form6.add(Arrays.asList(coordenadasTableroCPU[55], coordenadasTableroCPU[56], coordenadasTableroCPU[57], coordenadasTableroCPU[58], coordenadasTableroCPU[59])); // 5 horizontal
+		form6.add(Arrays.asList(coordenadasTableroCPU[10], coordenadasTableroCPU[20], coordenadasTableroCPU[30], coordenadasTableroCPU[40])); // 4 vertical
+		form6.add(Arrays.asList(coordenadasTableroCPU[83], coordenadasTableroCPU[84], coordenadasTableroCPU[85])); // 3 horizontal
+		form6.add(Arrays.asList(coordenadasTableroCPU[91], coordenadasTableroCPU[81], coordenadasTableroCPU[71])); // 3 vertical
+		form6.add(Arrays.asList(coordenadasTableroCPU[2], coordenadasTableroCPU[3])); // 2 horizontal
+		formacionesCPU.add(form6);
+
+		// Formación 7
+		List<List<Point>> form7 = new ArrayList<>();
+		form7.add(Arrays.asList(coordenadasTableroCPU[65], coordenadasTableroCPU[66], coordenadasTableroCPU[67], coordenadasTableroCPU[68], coordenadasTableroCPU[69])); // 5 horizontal
+		form7.add(Arrays.asList(coordenadasTableroCPU[20], coordenadasTableroCPU[30], coordenadasTableroCPU[40], coordenadasTableroCPU[50])); // 4 vertical
+		form7.add(Arrays.asList(coordenadasTableroCPU[11], coordenadasTableroCPU[12], coordenadasTableroCPU[13])); // 3 horizontal
+		form7.add(Arrays.asList(coordenadasTableroCPU[91], coordenadasTableroCPU[81], coordenadasTableroCPU[71])); // 3 vertical
+		form7.add(Arrays.asList(coordenadasTableroCPU[4], coordenadasTableroCPU[5])); // 2 horizontal
+		formacionesCPU.add(form7);
+
+		// Formación 8
+		List<List<Point>> form8 = new ArrayList<>();
+		form8.add(Arrays.asList(coordenadasTableroCPU[35], coordenadasTableroCPU[36], coordenadasTableroCPU[37], coordenadasTableroCPU[38], coordenadasTableroCPU[39])); // 5 horizontal
+		form8.add(Arrays.asList(coordenadasTableroCPU[70], coordenadasTableroCPU[80], coordenadasTableroCPU[90], coordenadasTableroCPU[100-1])); // 4 vertical (ajustando índice 99)
+		form8.add(Arrays.asList(coordenadasTableroCPU[21], coordenadasTableroCPU[22], coordenadasTableroCPU[23])); // 3 horizontal
+		form8.add(Arrays.asList(coordenadasTableroCPU[54], coordenadasTableroCPU[64], coordenadasTableroCPU[74])); // 3 vertical
+		form8.add(Arrays.asList(coordenadasTableroCPU[7], coordenadasTableroCPU[8])); // 2 horizontal
+		formacionesCPU.add(form8);
+
+		// Formación 9
+		List<List<Point>> form9 = new ArrayList<>();
+		form9.add(Arrays.asList(coordenadasTableroCPU[85], coordenadasTableroCPU[86], coordenadasTableroCPU[87], coordenadasTableroCPU[88], coordenadasTableroCPU[89])); // 5 horizontal
+		form9.add(Arrays.asList(coordenadasTableroCPU[35], coordenadasTableroCPU[45], coordenadasTableroCPU[55], coordenadasTableroCPU[65])); // 4 vertical
+		form9.add(Arrays.asList(coordenadasTableroCPU[10], coordenadasTableroCPU[11], coordenadasTableroCPU[12])); // 3 horizontal
+		form9.add(Arrays.asList(coordenadasTableroCPU[76], coordenadasTableroCPU[77], coordenadasTableroCPU[78])); // 3 horizontal
+		form9.add(Arrays.asList(coordenadasTableroCPU[40], coordenadasTableroCPU[41])); // 2 horizontal
+		formacionesCPU.add(form9);
+
+		// Formación 10
+		List<List<Point>> form10 = new ArrayList<>();
+		form10.add(Arrays.asList(coordenadasTableroCPU[15], coordenadasTableroCPU[16], coordenadasTableroCPU[17], coordenadasTableroCPU[18], coordenadasTableroCPU[19])); // 5 horizontal
+		form10.add(Arrays.asList(coordenadasTableroCPU[25], coordenadasTableroCPU[35], coordenadasTableroCPU[45], coordenadasTableroCPU[55])); // 4 vertical
+		form10.add(Arrays.asList(coordenadasTableroCPU[70], coordenadasTableroCPU[71], coordenadasTableroCPU[72])); // 3 horizontal
+		form10.add(Arrays.asList(coordenadasTableroCPU[85], coordenadasTableroCPU[95], coordenadasTableroCPU[75])); // 3 vertical
+		form10.add(Arrays.asList(coordenadasTableroCPU[80], coordenadasTableroCPU[81])); // 2 horizontal
+		formacionesCPU.add(form10);
+
 	}
+	
 
 
 }
