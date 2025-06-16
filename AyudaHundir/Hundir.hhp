@@ -1,0 +1,20 @@
+[OPTIONS]
+Compatibility=1.1 or later
+Compiled file=Hundir.chm
+Contents file=d:\LM\ayudaHundir\Table of Contents.hhc
+Default topic=D:\LM\ayudaHundir\index.html
+Display compile progress=No
+Language=0xc0a Español (España, internacional)
+Title=Bienvenido
+
+
+[FILES]
+D:\LM\ayudaHundir\colocacion.html
+D:\LM\ayudaHundir\index.html
+D:\LM\ayudaHundir\login.html
+D:\LM\ayudaHundir\menuprincipal.html
+D:\LM\ayudaHundir\partida.html
+D:\LM\ayudaHundir\ranking.html
+
+[INFOTYPES]
+

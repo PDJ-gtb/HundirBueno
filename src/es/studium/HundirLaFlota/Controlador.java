@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -167,6 +168,7 @@ public  Controlador (Vista v, Modelo m){
    vista.btnRanking.addActionListener(this);
    vista.btnSalir.addActionListener(this);
    vista.menuPrincipal.addWindowListener(this);
+   vista.btnAyuda.addActionListener(this);
 
 
     }
@@ -280,6 +282,9 @@ public void actionPerformed(ActionEvent e)
 	    modelo.desconectar(conexion);
 	    vista.rankingFrame.setVisible(true);
 	}
+	else if (e.getSource().equals(vista.btnAyuda)) {
+	    abrirAyuda();
+	}
 	else if (e.getSource().equals(vista.btnSalir)) {
 	    int opcion = javax.swing.JOptionPane.showConfirmDialog(
 	        vista.menuPrincipal,
@@ -294,6 +299,23 @@ public void actionPerformed(ActionEvent e)
 	}
 
 
+}
+private void abrirAyuda()
+{
+    try
+    {
+        ProcessBuilder pb = new ProcessBuilder("hh.exe", "./AyudaHundir/Hundir.chm");
+        pb.start();
+        System.out.println("Abriendo el archivo CHM...");
+    }
+    catch (IOException e)
+    {
+        System.err.println("Error al intentar abrir el archivo CHM: " + e.getMessage());
+        javax.swing.JOptionPane.showMessageDialog(null,
+            "No se pudo abrir el archivo de ayuda.",
+            "Error",
+            javax.swing.JOptionPane.ERROR_MESSAGE);
+    }
 }
 }
    
