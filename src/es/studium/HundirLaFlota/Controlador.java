@@ -245,9 +245,11 @@ public void actionPerformed(ActionEvent e)
 		modelo.desconectar(connection);
 	}
 	else if (e.getSource().equals(vista.btnNuevaPartida)) {
+		vista.reiniciarPartida();
 		vista.nuevaPartida.setLocationRelativeTo(null);
 		vista.nuevaPartida.toFront();
 		vista.nuevaPartida.setVisible(true);
+		
 
 		System.out.println("Nueva partida");
 	}

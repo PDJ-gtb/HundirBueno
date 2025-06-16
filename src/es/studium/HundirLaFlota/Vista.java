@@ -16,6 +16,8 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.TextField;
 import java.awt.Toolkit;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
@@ -31,6 +33,8 @@ import javax.swing.BoxLayout;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.SwingUtilities;
+import javax.swing.Timer;
 
 public class Vista {
 	Font fuente = new Font("Wrecked Ship", Font.BOLD, 24);
@@ -40,6 +44,7 @@ public class Vista {
 	Frame carga = new Frame("Pantalla de Carga");
 	JFrame menuPrincipal = new JFrame("Menú Principal");
 	JPanel distribucionPanel = new JPanel();
+	JPanel panelColocacion = new JPanel();
 	JPanel panelDisparo = new JPanel();
 	JFrame nuevaPartida = new JFrame("Partida");
 
@@ -91,19 +96,29 @@ public class Vista {
 	// Conjunto de índices ocupados (celdas seleccionadas)
 	Set<Integer> celdasOcupadas = new HashSet<>();
 
-	// Guardar disparosJugador
+
+	private Point[][] barcosCPU;
+	private int puntosUsuario = 0;
+	private int puntosCPU = 0;
+	private boolean turnoJugador = true;
 	private List<Point> disparosJugador = new ArrayList<>();
+	private List<Boolean> aciertosJugador = new ArrayList<>();
+
+	private List<Point> disparosCPU = new ArrayList<>();
+	private List<Boolean> aciertosCPU = new ArrayList<>();
 
 
-	// CONTADOR PUNTOS
-	int contadorPuntosUsuario = 0;
-	int contadorPuntosCPU = 0;
 
-	// Contador turnos
-	int turno =0;
+	private boolean juegoTerminado = false;
 
-	List<Point> disparosCPU = new ArrayList<>();
+
 	Point disparoCPU = new Point(0,0);
+	// Guardar disparosJugador
+
+	private Point puntoExplosion = null;
+	private int radioExplosion = 0;
+	private Timer timerExplosion;
+
 
 	public Vista() {
 
@@ -111,7 +126,7 @@ public class Vista {
 		inicializarLogin();
 		inicializarMenu();
 		inicializarNuevaPartida();
- // COORDENADAS DE TOODO EL TABLERO
+		// COORDENADAS DE TOODO EL TABLERO
 		coordenadasBarco[0] = new Point(111, 97);   // A1
 		coordenadasBarco[1] = new Point(177, 97);   // A2
 		coordenadasBarco[2] = new Point(243, 97);   // A3
@@ -221,10 +236,10 @@ public class Vista {
 		coordenadasBarco[97] = new Point(573, 529);  // J8
 		coordenadasBarco[98] = new Point(639, 529);  // J9
 		coordenadasBarco[99] = new Point(705, 529);  // J10
-		
-		
+
+
 		//TABLERO CPU
-		
+
 		coordenadasTableroCPU[0] = new Point(1085, 97);   // A1
 		coordenadasTableroCPU[1] = new Point(1151, 97);   // A2
 		coordenadasTableroCPU[2] = new Point(1217, 97);   // A3
@@ -337,7 +352,7 @@ public class Vista {
 
 
 
-		
+
 		// TABLERO USUARIO
 
 		coordenadasTableroUsuario[0] = new Point(111, 97);   // A1
@@ -503,6 +518,7 @@ public class Vista {
 		menuPrincipal.setSize(800, 400);
 		menuPrincipal.setLocationRelativeTo(null);
 		menuPrincipal.setVisible(true);
+
 	}
 
 	private void inicializarNuevaPartida() {
@@ -510,7 +526,7 @@ public class Vista {
 		imagen = caja.getImage("./tablero.png");
 
 		// Crear panel personalizado que dibuja la imagen
-		JPanel panelNP = new JPanel() {
+		JPanel panelColocacion = new JPanel() {
 			@Override
 			protected void paintComponent(Graphics g) {
 				super.paintComponent(g);
@@ -537,7 +553,7 @@ public class Vista {
 				String texto3 = "BARCOS";
 				int anchoTexto3 = fm.stringWidth(texto3);
 				g2.drawString(texto3, 890 - anchoTexto3 / 2, 270);
-				
+
 				String texto6 = "RESTANTES";
 				int anchoTexto6 = fm.stringWidth(texto6);
 				g2.drawString(texto6, 890 - anchoTexto6 / 2, 295);
@@ -549,11 +565,11 @@ public class Vista {
 				String texto5 = "1000 PTS";
 				int anchoTexto5 = fm.stringWidth(texto5);
 				g2.drawString(texto5, 890 - anchoTexto5 / 2, 555);
-				
+
 				String textoCPU = "JUGADOR";
 				int anchoTextoCPU = fm.stringWidth(textoCPU);
 				g2.drawString(textoCPU, 410 - anchoTextoCPU / 2, 585);
-				
+
 				String textoJugador = "CPU";
 				int anchoTextoJugador = fm.stringWidth(textoJugador);
 				g2.drawString(textoJugador, 1386 - anchoTextoJugador / 2, 585);
@@ -599,7 +615,7 @@ public class Vista {
 			}
 		};
 
-		panelNP.addMouseListener(new MouseAdapter() {
+		panelColocacion.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				Point clickUsuario = new Point(e.getX(), e.getY());
@@ -610,13 +626,13 @@ public class Vista {
 						// Evita duplicados
 						if (!barcoActual.contains(coordenadasBarco[i])) {
 							barcoActual.add(coordenadasBarco[i]);
-							panelNP.repaint();
+							panelColocacion.repaint();
 						}
 
 						// Si el barco actual ya tiene todas sus casillas
 						if (barcoActual.size() == tamanos[indiceBarco]) {
 							barcosUsuario.add(new ArrayList<>(barcoActual));
-							JOptionPane.showMessageDialog(panelNP, 
+							JOptionPane.showMessageDialog(panelColocacion, 
 									"¡Has colocado el barco de " + tamanos[indiceBarco] + " casillas!");
 
 							barcoActual.clear();
@@ -624,15 +640,16 @@ public class Vista {
 
 							// IMPORTANTE: después de incrementar, comprobar si ya están todos
 							if (indiceBarco == tamanos.length) {
-								JOptionPane.showMessageDialog(panelNP, "¡Ya colocaste todos los barcos!");
-								JOptionPane.showMessageDialog(panelNP, "¡En breve comenzará la partida!");
+								JOptionPane.showMessageDialog(panelColocacion, "¡Ya colocaste todos los barcos!");
+								JOptionPane.showMessageDialog(panelColocacion, "¡En breve comenzará la partida!");
 
 								try {
 									Thread.sleep(3000);
 								} catch (InterruptedException tiempo) {
 									tiempo.printStackTrace();
 								}
-
+								inicializarFormacionesCPU();
+								inicializarBarcosCPU();
 								iniciarDisparos();
 							}
 						}
@@ -641,14 +658,16 @@ public class Vista {
 					}
 				}
 			}
+
+
 		});
 
 
 		// Establecer el layout y añadir el panel al JFrame
 		nuevaPartida.getContentPane().setLayout(null); // Usamos layout nulo para posicionar manualmente
-		panelNP.setBounds(0, 0, 1782, 625); // Usa todo el espacio del JFrame
+		panelColocacion.setBounds(0, 0, 1782, 625); // Usa todo el espacio del JFrame
 
-		nuevaPartida.getContentPane().add(panelNP);
+		nuevaPartida.getContentPane().add(panelColocacion);
 		nuevaPartida.setSize(1798, 664);
 		nuevaPartida.setLocationRelativeTo(null); // Centra la ventana
 		nuevaPartida.setVisible(true);
@@ -662,7 +681,7 @@ public class Vista {
 	{
 		inicializarFormacionesCPU();
 		List<List<Point>> formacionElegidaCPU = obtenerFormacionAleatoria();
-		
+
 		inicializarImpactos();
 		// Quita el panel anterior
 		nuevaPartida.getContentPane().removeAll();
@@ -692,25 +711,29 @@ public class Vista {
 				Graphics2D g2 = (Graphics2D) g;
 				FontMetrics fm = g2.getFontMetrics();  // Obtiene las métricas de la fuente actual
 
-				String texto1 = "Almirante";
+				String texto1 = "ALMIRANTE";
 				int anchoTexto1 = fm.stringWidth(texto1);  // Calcula el ancho en píxeles
-				g2.drawString(texto1, 1100 - anchoTexto1 / 2, 90);  // Centrado horizontal
+				g2.drawString(texto1, 890 - anchoTexto1 / 2, 170);  // Centrado horizontal
 
-				String texto2 = "Nombre";
+				String texto2 = "NOMBRE";
 				int anchoTexto2 = fm.stringWidth(texto2);
-				g2.drawString(texto2, 1100 - anchoTexto2 / 2, 120);
+				g2.drawString(texto2, 890 - anchoTexto2 / 2, 195);
 
-				String texto3 = "Barcos Restantes:";
-				int anchoTexto3 = fm.stringWidth(texto3);
-				g2.drawString(texto3, 1020 - anchoTexto3 / 2, 225);
+				
 
-				String texto4 = "Puntuación:";
-				int anchoTexto4 = fm.stringWidth(texto4);
-				g2.drawString(texto4, 1020 - anchoTexto4 / 2, 530);
+				// Mostrar puntuación del jugador y de la CPU
+				g.setFont(new Font("Arial", Font.BOLD, 18));
+				g.setColor(Color.BLACK);
 
-				String texto5 = "1000";
-				int anchoTexto5 = fm.stringWidth(texto5);
-				g2.drawString(texto5, 1020 - anchoTexto5 / 2, 560);
+				String puntosJugadorTexto = "Jugador: " + puntosUsuario;
+				int anchoJugador = fm.stringWidth(puntosJugadorTexto);
+				g2.drawString(puntosJugadorTexto, 890 - anchoJugador / 2, 555); // un poco más abajo
+
+				String puntosCpuTexto = "CPU: " + puntosCPU;
+				int anchoCpu = fm.stringWidth(puntosCpuTexto);
+				g2.drawString(puntosCpuTexto, 890 - anchoCpu / 2, 580); // debajo del anterior
+
+
 				// Dibuja los barcos del usuario
 				if (barcosUsuario != null) {
 					g.setColor(Color.BLUE);  // Color para los barcos del usuario
@@ -724,72 +747,36 @@ public class Vista {
 						}
 					}
 				}
+				// DISPAROS JUGADOR
 
-				// Dibuja los disparos del jugador
-				for (Point puntoDisparo : disparosJugador) {
-				    boolean acierto = false;
-
-				    for (List<Point> barcoCPU : formacionElegidaCPU) {
-				        for (Point puntoCPU : barcoCPU) {
-				            if (estaEnCelda(puntoCPU, puntoDisparo)) {
-				                acierto = true;
-				                break;
-				            }
-				        }
-				        if (acierto) break;
-				    }
-
-				    if(acierto) {
-				    	contadorPuntosUsuario+=15;
-				        System.out.println("Fogonazo---");
-				        g.setColor(Color.RED);
-				    } else {
-				        System.out.println("Piscinazo---");
-				        g.setColor(Color.cyan);
-				    }
-
-				    int size = 30;
-				    int x = puntoDisparo.x - size / 2;
-				    int y = puntoDisparo.y - size / 2;
-
-				    g.fillRect(x, y, size, size);
+				for (int i = 0; i < disparosJugador.size(); i++) {
+					Point p = disparosJugador.get(i);
+					boolean acierto = aciertosJugador.get(i);
+					g.setColor(acierto ? Color.RED : Color.CYAN);
+					g.fillRect(p.x - 13, p.y - 13, 26, 26);
 				}
 
-				// Dibuja disparos de CPU
-				for (Point disparo : disparosCPU) {
-				    boolean acierto = false;
-
-				    // Comprobar si el disparo ha impactado en algún barco del usuario
-				    for (List<Point> barco : barcosUsuario) {
-				        for (Point p : barco) {
-				            if (estaEnCelda(p, disparo)) {
-				                acierto = true;
-				                break;
-				            }
-				        }
-				        if (acierto) {
-				        	contadorPuntosCPU+=15;
-				        	break;
-				        }
-				    }
-
-				    // Pintar en rojo si acierto, azul si fallo
-				    g.setColor(acierto ? Color.RED : Color.cyan);
-
-				    // Ajusta el dibujo para que se centre en la celda (si tus celdas tienen anchoCelda x altoCelda)
-				    g.fillRect(disparo.x - 30 / 2, disparo.y - 30 / 2, 30, 30);
-				
-		
-
+				// DISPAROS CPU
+				for (int i = 0; i < disparosCPU.size(); i++) {
+					Point p = disparosCPU.get(i);
+					boolean acierto = aciertosCPU.get(i);
+					g.setColor(acierto ? Color.RED : Color.CYAN);
+					g.fillRect(p.x - 13, p.y - 13, 26, 26);
 				}
 
-				this.addMouseListener(new MouseAdapter() {
-					public void mouseClicked(MouseEvent e) {
-					    Point disparo = obtenerCeldaDesdeClick(e.getX(), e.getY());
-					    procesarDisparoJugador(disparo);
-					}
+				if (puntoExplosion != null) {
+					Graphics2D g2d = (Graphics2D) g;
+					g2d.setColor(new Color(255, 0, 0, 180)); // rojo semitransparente
+					g2d.fillOval(puntoExplosion.x - radioExplosion / 2, puntoExplosion.y - radioExplosion / 2, radioExplosion, radioExplosion);
+				}
 
-				});
+
+
+
+
+
+
+
 
 
 			}
@@ -800,6 +787,19 @@ public class Vista {
 				return new Dimension(1782, 625);
 			}
 		};
+
+		panelDisparo.addMouseListener(new MouseAdapter() {
+			public void mouseClicked(MouseEvent e) {
+				if (!turnoJugador || juegoTerminado) return;
+
+				Point disparo = obtenerCeldaDesdeClickCPU(e.getX(), e.getY());
+				if (disparo != null) {
+					procesarDisparoJugador(disparo);
+				}
+
+			}
+		});
+
 
 		panelDisparo.setBounds(0, 0, 1782, 625);
 		nuevaPartida.getContentPane().add(panelDisparo);
@@ -819,17 +819,6 @@ public class Vista {
 		return true;
 	}
 
-	private void procesarDisparoJugador(Point celdaDisparo) {
-	    if (turno != 0) return;  // Solo puede disparar el jugador en su turno
-
-	    if (celdaDisparo != null && !disparosJugador.contains(celdaDisparo)) {
-	        registrarDisparo(celdaDisparo);
-	        turno = 1;  // Paso turno a CPU
-	        panelDisparo.repaint();
-	        turnoCPU(); // La CPU hace su disparo y luego cambia turno a jugador
-	        System.out.println("Ha disparado el Jugador");
-	    }
-	}
 
 	List<List<Boolean>> impactosBarcosCPU = new ArrayList<>();
 
@@ -859,7 +848,7 @@ public class Vista {
 
 					// Comprobar si barco completo hundido
 					if (barcoHundido(impactos)) {
-						System.out.println("Barco hundido! Puntos: " + contadorPuntosUsuario);
+						System.out.println("Barco hundido! Puntos: " + puntosUsuario);
 					}
 					break;
 				}
@@ -876,81 +865,81 @@ public class Vista {
 
 		// Aquí podrías añadir la lógica para comprobar fin de partida:
 		if (todosBarcosHundidos()) {
-			System.out.println("Puntos del Jugador:"+contadorPuntosUsuario);
-			System.out.println("Puntos de la CPU: "+contadorPuntosCPU);
+			System.out.println("Puntos del Jugador:"+puntosUsuario);
+			System.out.println("Puntos de la CPU: "+puntosCPU);
 			System.out.println("¡Has ganado la partidaaaaaaaaaaaaaaaaaa!");
 			// Acción para terminar la partida
 		}
 	}
 
-	
+
 
 
 
 
 	private void turnoCPU() {
-	    disparoCPU = generarDisparoCPU();
-	    disparosCPU.add(disparoCPU); // Añadimos el disparo a la lista de disparos de la CPU
-
-	    boolean impacto = false;
-
-	    for (int i = 0; i < barcosUsuario.size(); i++) {
-	        List<Point> barco = barcosUsuario.get(i);
-	        for (int j = 0; j < barco.size(); j++) {
-	            Point p = barco.get(j);
-	            if (estaEnCelda(p, disparoCPU)) {
-	                impacto = true;
-	                // Actualizar impactos, puntos, etc.
-	                break;
-	            }
-	        }
-	        if (impacto) break;
-	    }
-
-	    
-
-	    System.out.println("Ha disparado la CPUUUUUUUUUUUU");
-	    turno = 0;
-	    partida.repaint();
+		generarDisparoCPU(); // el método ya hace todo internamente
+		System.out.println("Ha disparado la CPUUUUUUUUUUUU");
+		turnoJugador = true;
+		partida.repaint();
 	}
 
 
 
-// Comprueba si todas las casillas de un barco están impactadas
+
+	// Comprueba si todas las casillas de un barco están impactadas
 	private boolean barcoHundido(List<Boolean> impactos) {
-	    for (int i = 0; i < impactos.size(); i++) {
-	        Boolean casillaImpactada = impactos.get(i);
-	        if (!casillaImpactada) {
-	            return false;
-	        }
-	    }
-	    return true;
+		for (int i = 0; i < impactos.size(); i++) {
+			Boolean casillaImpactada = impactos.get(i);
+			if (!casillaImpactada) {
+				return false;
+			}
+		}
+		return true;
 	}
 
 
 
 
 
-	 // private int anchoCelda = 66;
-//	private int altoCelda = 48;
+	// private int anchoCelda = 66;
+	//	private int altoCelda = 48;
 
 
-	private Point generarDisparoCPU() {
-	    int indiceRandom;
-	    Point disparo;
+	public void generarDisparoCPU() {
+		Random random = new Random();
+		Point disparo;
 
-	    do {
-	        indiceRandom = (int) (Math.random() * coordenadasTableroUsuario.length);
-	        disparo = coordenadasBarco[indiceRandom];
-	        // Evitar disparar a una celda ya atacada por la CPU
-	    } while (disparosCPU.contains(disparo));
+		do {
+			disparo = coordenadasTableroUsuario[random.nextInt(coordenadasTableroUsuario.length)];
+		} while (disparosCPU.contains(disparo)); // Evita disparar en el mismo sitio
 
-	    return disparo;
+		boolean acierto = false;
+
+		for (List<Point> barco : barcosUsuario) { // ✔️ válido
+			for (Point parte : barco) {
+				if (parte.equals(disparo)) {
+					puntosCPU++;
+					acierto = true;
+					break;
+				}
+			}
+			if (acierto) break;
+		}
+
+
+		disparosCPU.add(disparo);
+		aciertosCPU.add(acierto);
+
+		panelDisparo.repaint(); // Forzamos el repintado del tablero izquierdo
+
+		turnoJugador = true;
+		comprobarGanador();
 	}
 
 
 
-// PUSH
+	// PUSH
 
 	public void manejarDisparo(Point click) {
 		// SOLO PARA VERIFICAR SI SE HA DISPARADO YA AHI
@@ -990,25 +979,143 @@ public class Vista {
 				click.y >= celdaY && click.y < celdaY + altoCelda);
 
 	}
-	public Point obtenerCeldaDesdeClick(int x, int y) {
-		for (int i = 0; i < coordenadasBarco.length; i++) {
-			Point celda = coordenadasBarco[i];
+
+	private Point obtenerCeldaDesdeClickUsuario(int x, int y) {
+		for (Point celda : coordenadasTableroUsuario) {
 			Rectangle areaCelda = new Rectangle(celda.x - 13, celda.y - 13, 26, 26);
 			if (areaCelda.contains(x, y)) {
 				return celda;
 			}
 		}
-		return null; // Click fuera de las celdas
+		return null;
+	}
+	private Point obtenerCeldaDesdeClickCPU(int x, int y) {
+		for (Point celda : coordenadasTableroCPU) {
+			Rectangle areaCelda = new Rectangle(celda.x - 13, celda.y - 13, 26, 26);
+			if (areaCelda.contains(x, y)) {
+				return celda;
+			}
+		}
+		return null;
 	}
 
+	public void procesarDisparoJugador(Point disparo) {
+		if (!disparosJugador.contains(disparo)) {
+			boolean acierto = false;
+
+			for (Point[] barco : barcosCPU) {
+				for (Point parte : barco) {
+					if (parte.equals(disparo)) {
+						puntoExplosion = disparo;
+						iniciarExplosionAnimada();
+
+						puntosUsuario+=5;
+						acierto = true;
+						break;
+					}
+				}
+				if (acierto) break;
+			}
+
+			disparosJugador.add(disparo);
+			aciertosJugador.add(acierto);
+			panelDisparo.repaint(); // tablero derecho
+			turnoJugador = acierto; // Si acierta, mantiene turno
+
+			comprobarGanador();
+
+			if (!juegoTerminado && !turnoJugador) {
+				// CPU dispara si el jugador ha fallado
+				Timer timer = new Timer(600, evt -> procesarDisparoCPU());
+				timer.setRepeats(false);
+				timer.start();
+			}
+
+		}
+	}
+
+
+	private void iniciarExplosionAnimada() {
+		radioExplosion = 0;
+
+		if (timerExplosion != null && timerExplosion.isRunning()) {
+			timerExplosion.stop();
+		}
+
+		timerExplosion = new Timer(30, new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				radioExplosion += 8;
+				if (radioExplosion > 80) {
+					timerExplosion.stop();
+					puntoExplosion = null;
+				}
+				panelDisparo.repaint();
+			}
+		});
+
+		timerExplosion.start();
+	}
+
+
+
+	private void procesarDisparoCPU() {
+		Random random = new Random();
+		Point disparo;
+
+		do {
+			disparo = coordenadasTableroUsuario[random.nextInt(coordenadasTableroUsuario.length)];
+		} while (disparosCPU.contains(disparo));
+
+		boolean acierto = false;
+
+		for (List<Point> barco : barcosUsuario) {
+			for (Point parte : barco) {
+				if (parte.equals(disparo)) {
+					puntoExplosion = disparo;
+					iniciarExplosionAnimada();
+					puntosCPU+=5;
+					acierto = true;
+					break;
+				}
+			}
+			if (acierto) break;
+		}
+
+		disparosCPU.add(disparo);
+		aciertosCPU.add(acierto);
+
+		panelDisparo.repaint(); // tablero izquierdo
+
+		turnoJugador = !acierto; // vuelve a jugar el jugador
+		comprobarGanador(); // si hay un ganador se detiene
+		// Si acierta, volver a disparar automáticamente
+		if (!juegoTerminado && !turnoJugador) {
+			Timer timer = new Timer(600, evt -> procesarDisparoCPU());
+			timer.setRepeats(false);
+			timer.start();
+		}
+	}
+
+
+
+	private void comprobarGanador() {
+		int puntosMaximos = 85; // 5 barcos: 5 + 4 + 3 + 3 + 2 = 17 casillas
+
+		if (puntosUsuario >= puntosMaximos) {
+			juegoTerminado = true;
+			JOptionPane.showMessageDialog(panelDisparo, "🎉 ¡Has ganado la partida!");
+		} else if (puntosCPU >= puntosMaximos) {
+			juegoTerminado = true;
+			JOptionPane.showMessageDialog(panelDisparo, "💥 Has perdido contra la CPU.");
+		}
+	}
 
 
 
 	private void inicializarFormacionesCPU() {
 		formacionesCPU = new ArrayList<>();
 
-		// Formación 1 (barcos colocados verticalmente y horizontalmente en filas F-J)
-		List<List<List<Point>>> formacionesCPU = new ArrayList<>();
+
 
 		// Formación 1
 		List<List<Point>> form1 = new ArrayList<>();
@@ -1101,7 +1208,48 @@ public class Vista {
 		formacionesCPU.add(form10);
 
 	}
-	
+
+	private void inicializarBarcosCPU() {
+		Random random = new Random();
+		int formacionSeleccionadaCPU = random.nextInt(formacionesCPU.size()); // aleatoria
+		List<List<Point>> formacionCPU = formacionesCPU.get(formacionSeleccionadaCPU);
+		barcosCPU = new Point[formacionCPU.size()][];
+		for (int i = 0; i < formacionCPU.size(); i++) {
+			barcosCPU[i] = formacionCPU.get(i).toArray(new Point[0]);
+		}
+	}
+
+	public void reiniciarPartida() {
+	    // Limpiar todos los datos de juego
+	    disparosJugador.clear();
+	    disparosCPU.clear();
+	    aciertosJugador.clear();
+	    aciertosCPU.clear();
+	    barcosUsuario.clear();
+	    barcosCPU = null;
+	    barcoActual.clear();
+
+	    // Resetear estado del juego
+	    puntosUsuario = 0;
+	    puntosCPU = 0;
+	    juegoTerminado = false;
+	    turnoJugador = true;
+	    puntoExplosion = null;
+	    radioExplosion = 0;
+	    indiceBarco = 0;
+
+	    // Repintar ambos paneles para limpiar lo visible
+	    panelDisparo.repaint();
+	    panelColocacion.repaint();
+
+	    // Mostrar el panel de colocación (nivel básico)
+	    panelDisparo.setVisible(false);
+	    panelColocacion.setVisible(true);
+
+	    
+	    //Informar al jugador
+	    JOptionPane.showMessageDialog(panelColocacion, "Coloca tus barcos en el tablero izquierdo.");
+	}
 
 
 }
