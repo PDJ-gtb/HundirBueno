@@ -89,13 +89,8 @@ public class Vista {
 	Toolkit caja = Toolkit.getDefaultToolkit();
 	Image imagen;
 
-	// Tamaño de botones si lo necesitas
-	Dimension tamanoFijo = new Dimension(100, 40);
-
-
-
-	private final int[] barcosPorColocar = {5, 4, 3, 3, 2};
-	private java.util.List<Point> celdasSeleccionadas = new ArrayList<>();
+	
+	
 
 	List<List<Point>> formacionElegidaCPU = new ArrayList();
 
@@ -103,9 +98,7 @@ public class Vista {
 	Point[] coordenadasBarco = new Point[100];
 	Point[] coordenadasTableroCPU = new Point[100];
 	Point[] coordenadasTableroUsuario = new Point[100];
-	// Para rellenar las casillas
-	// 0-4 (5) 5-8 (4) 9-11 (3) 12-14 (3) 15-16 (2)   POSICIONES EN EL ARRAY DE LOS BARCOS
-	List<Point> puntosClicados = new ArrayList<>();
+
 
 	List<List<Point>> barcosUsuario = new ArrayList<>();  // Lista de barcos (cada uno con sus casillas)
 	List<Point> barcoActual = new ArrayList<>();   // Casillas del barco que se está colocando
@@ -146,6 +139,7 @@ public class Vista {
 
 
 
+	List<List<Boolean>> impactosBarcosCPU = new ArrayList<>();
 
 
 
@@ -509,6 +503,7 @@ public class Vista {
 	}
 
 	public void inicializarRanking() {
+		// Inicializa el ranking creando y configurando la tabla
 		String[] columnas = { "Jugador", "Victorias" };
 		modeloRanking = new DefaultTableModel(columnas, 0);
 		tablaRanking = new JTable(modeloRanking);
@@ -524,19 +519,6 @@ public class Vista {
 	}
 
 
-	private Point obtenerCeldaDesdeClick(Point click) {
-		int anchoCelda = 66;
-		int altoCelda = 48;
-
-		for (Point celda : coordenadasBarco) {
-			Rectangle area = new Rectangle(celda.x, celda.y, anchoCelda, altoCelda);
-			if (area.contains(click)) {
-				return celda;
-			}
-		}
-
-		return null; // No se hizo clic en ninguna celda válida
-	}
 
 
 	public void inicializarLogin() {
@@ -630,13 +612,24 @@ public class Vista {
 		panelCentral.add(lblTitulo);
 		panelCentral.add(Box.createVerticalStrut(40));
 
-		for (JButton boton : botones) {
-			JPanel botonWrapper = new JPanel(); // Para centrar cada botón
-			botonWrapper.setBackground(Color.WHITE);
-			botonWrapper.add(boton);
-			panelCentral.add(botonWrapper);
-			panelCentral.add(Box.createVerticalStrut(20));
+		// Recorremos el array de botones utilizando un bucle for tradicional
+		for (int i = 0; i < botones.length; i++) {
+		    JButton boton = botones[i];
+
+		    // Creamos un contenedor para centrar visualmente el botón
+		    JPanel panelBotones = new JPanel();
+		    panelBotones.setBackground(Color.WHITE); 
+
+		    // Añadimos el botón al contenedor
+		    panelBotones.add(boton);
+
+		    // Añadimos el contenedor al panel central
+		    panelCentral.add(panelBotones);
+
+		    // Añadimos un espacio vertical debajo del botón para separarlo del siguiente
+		    panelCentral.add(Box.createVerticalStrut(20));
 		}
+
 
 		// Centrado absoluto
 		menuPrincipal.getContentPane().setLayout(new GridBagLayout());
@@ -802,11 +795,7 @@ public class Vista {
 		nuevaPartida.setLocationRelativeTo(null); // Centra la ventana
 		nuevaPartida.setVisible(true);
 	}
-	public List<List<Point>> obtenerFormacionAleatoria() {
-		Random rand = new Random();
-		int indice = rand.nextInt(formacionesCPU.size());
-		return formacionesCPU.get(indice);
-	}
+
 	public void iniciarDisparos()
 	{
 		Font fuenteNuevaPartida = cargarFuentePersonalizada("./font/Warzone.ttf", 22f, Font.BOLD);
@@ -814,7 +803,7 @@ public class Vista {
 		inicializarFormacionesCPU();
 		List<List<Point>> formacionElegidaCPU = obtenerFormacionAleatoria();
 
-		inicializarImpactos();
+		
 		// Quita el panel anterior
 
 		contenedorPaneles.remove(1); // quitamos el panel anterior en la posición de "disparo"
@@ -905,21 +894,12 @@ public class Vista {
 					g.setColor(acierto ? Color.RED : Color.CYAN);
 					g.fillRect(p.x - 13, p.y - 13, 26, 26);
 				}
-
+				// Explosión
 				if (puntoExplosion != null) {
 					Graphics2D g2d = (Graphics2D) g;
 					g2d.setColor(new Color(255, 0, 0, 180)); // rojo semitransparente
 					g2d.fillOval(puntoExplosion.x - radioExplosion / 2, puntoExplosion.y - radioExplosion / 2, radioExplosion, radioExplosion);
 				}
-
-
-
-
-
-
-
-
-
 
 			}
 
@@ -951,315 +931,6 @@ public class Vista {
 
 	}
 
-	private boolean todosBarcosHundidos() {
-		for (int i = 0; i < impactosBarcosCPU.size(); i++) {
-			if (!barcoHundido(impactosBarcosCPU.get(i))) {
-				System.out.println("El barco " + i + " aún sigue a flote.");
-				return false;
-			}
-		}
-		System.out.println("¡Todos los barcos enemigos han sido hundidos!");
-		return true;
-	}
-
-
-	List<List<Boolean>> impactosBarcosCPU = new ArrayList<>();
-
-	// Inicializar impactos (hacerlo al cargar la formación CPU)
-	private void inicializarImpactos() {
-		impactosBarcosCPU.clear();
-		for (List<Point> barco : formacionElegidaCPU) {
-			List<Boolean> impactosBarco = new ArrayList<>();
-			for (int i = 0; i < barco.size(); i++) {
-				impactosBarco.add(false);
-			}
-			impactosBarcosCPU.add(impactosBarco);
-		}
-	}
-	public void registrarDisparo(Point disparo) {
-		boolean acierto = false;
-
-		for (int i = 0; i < formacionElegidaCPU.size(); i++) {
-			List<Point> barco = formacionElegidaCPU.get(i);
-			List<Boolean> impactos = impactosBarcosCPU.get(i);
-
-			for (int j = 0; j < barco.size(); j++) {
-				Point celdaBarco = barco.get(j);
-				if (estaEnCelda(celdaBarco, disparo)) {
-					acierto = true;
-					impactos.set(j, true);  // Marcar esta casilla como impactada
-
-					// Comprobar si barco completo hundido
-					if (barcoHundido(impactos)) {
-						System.out.println("Barco hundido! Puntos: " + puntosUsuario);
-					}
-					break;
-				}
-			}
-			if (acierto) break;
-		}
-
-		if (!acierto) {
-			System.out.println("Disparo fallado.");
-		}
-
-		// Guardar disparo para pintar
-		disparosJugador.add(disparo);
-
-		// Aquí podrías añadir la lógica para comprobar fin de partida:
-		if (todosBarcosHundidos()) {
-			System.out.println("Puntos del Jugador:"+puntosUsuario);
-			System.out.println("Puntos de la CPU: "+puntosCPU);
-			System.out.println("¡Has ganado la partidaaaaaaaaaaaaaaaaaa!");
-			// Acción para terminar la partida
-		}
-	}
-
-
-
-
-
-
-	private void turnoCPU() {
-		generarDisparoCPU(); // el método ya hace todo internamente
-		System.out.println("Ha disparado la CPUUUUUUUUUUUU");
-		turnoJugador = true;
-		partida.repaint();
-	}
-
-
-
-
-	// Comprueba si todas las casillas de un barco están impactadas
-	private boolean barcoHundido(List<Boolean> impactos) {
-		for (int i = 0; i < impactos.size(); i++) {
-			Boolean casillaImpactada = impactos.get(i);
-			if (!casillaImpactada) {
-				return false;
-			}
-		}
-		return true;
-	}
-
-
-
-
-
-	// private int anchoCelda = 66;
-	//	private int altoCelda = 48;
-
-
-	public void generarDisparoCPU() {
-		Random random = new Random();
-		Point disparo;
-
-		do {
-			disparo = coordenadasTableroUsuario[random.nextInt(coordenadasTableroUsuario.length)];
-		} while (disparosCPU.contains(disparo)); // Evita disparar en el mismo sitio
-
-		boolean acierto = false;
-
-		for (List<Point> barco : barcosUsuario) { // ✔️ válido
-			for (Point parte : barco) {
-				if (parte.equals(disparo)) {
-					puntosCPU++;
-					acierto = true;
-					break;
-				}
-			}
-			if (acierto) break;
-		}
-
-
-		disparosCPU.add(disparo);
-		aciertosCPU.add(acierto);
-
-		panelDisparo.repaint(); // Forzamos el repintado del tablero izquierdo
-
-		turnoJugador = true;
-		comprobarGanador();
-	}
-
-
-
-	// PUSH
-
-	public void manejarDisparo(Point click) {
-		// SOLO PARA VERIFICAR SI SE HA DISPARADO YA AHI
-		for (int i = 0; i < disparosJugador.size(); i++) {
-			if (disparosJugador.get(i).equals(click)) return;
-		}
-
-		disparosJugador.add(click);
-
-		boolean impacto = false;
-
-		for (int i = 0; i < formacionElegidaCPU.size(); i++) {
-			// Ya que formacion.get(i) no devuelve un punto sino una lista de puntos
-			List<Point> barco = formacionElegidaCPU.get(i);
-
-			for (int j = 0; j < barco.size(); j++) {
-				Point parte = barco.get(j);
-				if (estaEnCelda(parte, click)) {
-					impacto = true;
-					break;
-				}
-			}
-			if (impacto) break;
-		}
-
-		panelDisparo.repaint();
-	}
-
-	private boolean estaEnCelda(Point celda, Point click) {
-		int celdaX = celda.x;
-		int celdaY = celda.y;
-		int anchoCelda = 66;
-		int altoCelda = 48;
-
-
-		return (click.x >= celdaX && click.x < celdaX + anchoCelda &&
-				click.y >= celdaY && click.y < celdaY + altoCelda);
-
-	}
-
-	private Point obtenerCeldaDesdeClickUsuario(int x, int y) {
-		for (Point celda : coordenadasTableroUsuario) {
-			Rectangle areaCelda = new Rectangle(celda.x - 13, celda.y - 13, 26, 26);
-			if (areaCelda.contains(x, y)) {
-				return celda;
-			}
-		}
-		return null;
-	}
-	private Point obtenerCeldaDesdeClickCPU(int x, int y) {
-		for (Point celda : coordenadasTableroCPU) {
-			Rectangle areaCelda = new Rectangle(celda.x - 13, celda.y - 13, 26, 26);
-			if (areaCelda.contains(x, y)) {
-				return celda;
-			}
-		}
-		return null;
-	}
-
-	public void procesarDisparoJugador(Point disparo) {
-		if (!disparosJugador.contains(disparo)) {
-			boolean acierto = false;
-
-			for (Point[] barco : barcosCPU) {
-				for (Point parte : barco) {
-					if (parte.equals(disparo)) {
-						puntoExplosion = disparo;
-						iniciarExplosionAnimada();
-
-						puntosUsuario+=5;
-						acierto = true;
-						break;
-					}
-				}
-				if (acierto) break;
-			}
-
-			disparosJugador.add(disparo);
-			aciertosJugador.add(acierto);
-			panelDisparo.repaint(); // tablero derecho
-			turnoJugador = acierto; // Si acierta, mantiene turno
-
-			comprobarGanador();
-
-			if (!juegoTerminado && !turnoJugador) {
-				// CPU dispara si el jugador ha fallado
-				Timer timer = new Timer(600, evt -> procesarDisparoCPU());
-				timer.setRepeats(false);
-				timer.start();
-			}
-
-		}
-	}
-
-
-	private void iniciarExplosionAnimada() {
-		radioExplosion = 0;
-
-		if (timerExplosion != null && timerExplosion.isRunning()) {
-			timerExplosion.stop();
-		}
-
-		timerExplosion = new Timer(30, new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				radioExplosion += 8;
-				if (radioExplosion > 80) {
-					timerExplosion.stop();
-					puntoExplosion = null;
-				}
-				panelDisparo.repaint();
-			}
-		});
-
-		timerExplosion.start();
-	}
-
-
-
-	private void procesarDisparoCPU() {
-		Random random = new Random();
-		Point disparo;
-
-		do {
-			disparo = coordenadasTableroUsuario[random.nextInt(coordenadasTableroUsuario.length)];
-		} while (disparosCPU.contains(disparo));
-
-		boolean acierto = false;
-
-		for (List<Point> barco : barcosUsuario) {
-			for (Point parte : barco) {
-				if (parte.equals(disparo)) {
-					puntoExplosion = disparo;
-					iniciarExplosionAnimada();
-					puntosCPU+=5;
-					acierto = true;
-					break;
-				}
-			}
-			if (acierto) break;
-		}
-
-		disparosCPU.add(disparo);
-		aciertosCPU.add(acierto);
-
-		panelDisparo.repaint(); // tablero izquierdo
-
-		turnoJugador = !acierto; // vuelve a jugar el jugador
-		comprobarGanador(); // si hay un ganador se detiene
-		// Si acierta, volver a disparar automáticamente
-		if (!juegoTerminado && !turnoJugador) {
-			Timer timer = new Timer(600, evt -> procesarDisparoCPU());
-			timer.setRepeats(false);
-			timer.start();
-		}
-	}
-
-
-
-	private void comprobarGanador() {
-		int puntosMaximos = 85; // 5 barcos: 5 + 4 + 3 + 3 + 2 = 17 casillas
-
-		if (puntosUsuario >= puntosMaximos) {
-			juegoTerminado = true;
-			JOptionPane.showMessageDialog(panelDisparo, "🎉 ¡Has ganado la partida!");
-			Modelo modelo = new Modelo();
-			Connection conexion = null;
-			conexion=	modelo.conectar();
-			modelo.sumarVictoria(conexion, txtUsuario.getText());
-
-		} else if (puntosCPU >= puntosMaximos) {
-			juegoTerminado = true;
-			JOptionPane.showMessageDialog(panelDisparo, "💥 Has perdido contra la CPU.");
-		}
-	}
-
-
-
 	private void inicializarFormacionesCPU() {
 		formacionesCPU = new ArrayList<>();
 
@@ -1269,8 +940,8 @@ public class Vista {
 		List<List<Point>> form1 = new ArrayList<>();
 		form1.add(Arrays.asList(coordenadasTableroCPU[50], coordenadasTableroCPU[51], coordenadasTableroCPU[52], coordenadasTableroCPU[53], coordenadasTableroCPU[54])); // 5 horizontal
 		form1.add(Arrays.asList(coordenadasTableroCPU[62], coordenadasTableroCPU[72], coordenadasTableroCPU[82], coordenadasTableroCPU[92])); // 4 vertical
-		form1.add(Arrays.asList(coordenadasTableroCPU[75], coordenadasTableroCPU[76], coordenadasTableroCPU[77])); // 3 horizontal
-		form1.add(Arrays.asList(coordenadasTableroCPU[87], coordenadasTableroCPU[97], coordenadasTableroCPU[96])); // 3 horizontal (celdas contiguas)
+		form1.add(Arrays.asList(coordenadasTableroCPU[74], coordenadasTableroCPU[75], coordenadasTableroCPU[76])); // 3 horizontal
+		form1.add(Arrays.asList(coordenadasTableroCPU[77], coordenadasTableroCPU[87], coordenadasTableroCPU[97])); // 3 horizontal (celdas contiguas)
 		form1.add(Arrays.asList(coordenadasTableroCPU[99], coordenadasTableroCPU[89])); // 2 vertical
 		formacionesCPU.add(form1);
 
@@ -1357,13 +1028,232 @@ public class Vista {
 
 	}
 
+	public List<List<Point>> obtenerFormacionAleatoria() {
+		Random rand = new Random();
+		int indice = rand.nextInt(formacionesCPU.size());
+		return formacionesCPU.get(indice);
+	}
+
+
 	private void inicializarBarcosCPU() {
 		Random random = new Random();
-		int formacionSeleccionadaCPU = random.nextInt(formacionesCPU.size()); // aleatoria
+
+		int formacionSeleccionadaCPU = random.nextInt(formacionesCPU.size());
+
+		// Obtiene la formación seleccionada según el índice aleatorio
 		List<List<Point>> formacionCPU = formacionesCPU.get(formacionSeleccionadaCPU);
+
+		// Inicializa el array de barcos de la CPU con la cantidad de barcos en la formación
 		barcosCPU = new Point[formacionCPU.size()][];
+
+		// Recorre cada barco de la formación y lo convierte a array de Point[]
 		for (int i = 0; i < formacionCPU.size(); i++) {
 			barcosCPU[i] = formacionCPU.get(i).toArray(new Point[0]);
+		}
+	}
+
+	private Point obtenerCeldaDesdeClickCPU(int x, int y) {
+		for (Point celda : coordenadasTableroCPU) {
+			Rectangle areaCelda = new Rectangle(celda.x - 13, celda.y - 13, 26, 26);
+			if (areaCelda.contains(x, y)) {
+				return celda;
+			}
+		}
+		return null;
+	}
+
+	public void generarDisparoCPU() {
+		// Generador de números aleatorios
+		Random random = new Random();
+		Point disparo;
+
+		// Selecciona una coordenada aleatoria del tablero del jugador que no haya sido disparada ya
+		do {
+			disparo = coordenadasTableroUsuario[random.nextInt(coordenadasTableroUsuario.length)];
+		} while (disparosCPU.contains(disparo)); // Evita disparar en la misma posición dos veces
+
+		boolean acierto = false;
+
+		// COMPROBACIÓN DE SI HA ACERTADO
+		// Recorre cada barco del jugador para comprobar si el disparo ha acertado
+		for (int i = 0; i < barcosUsuario.size(); i++) {
+			List<Point> barco = barcosUsuario.get(i); // Obtiene el barco i
+
+			// Recorre las partes del barco
+			for (int j = 0; j < barco.size(); j++) {
+				Point parte = barco.get(j); // Parte j del barco
+				if (parte.equals(disparo)) {
+					puntosCPU++; 
+					acierto = true; 
+					break; // Sale del bucle de partes del barco
+				}
+			}
+
+			if (acierto) break; // Sale del bucle de barcos si ya ha acertado
+		}
+
+		// Añade el disparo a la lista para evitar repetirlo y registrar el resultado
+		disparosCPU.add(disparo);
+		aciertosCPU.add(acierto);
+
+		// Repinta el tablero del jugador (izquierdo) para mostrar el disparo
+		panelDisparo.repaint();
+
+		// Cambia el turno al jugador
+		turnoJugador = true;
+
+		// Comprueba si hay un ganador tras este disparo
+		comprobarGanador();
+	}
+
+	private void procesarDisparoCPU() {
+	    Random random = new Random();
+	    Point disparo;
+
+	    // Elegir un disparo aleatorio que no se haya realizado antes
+	    do {
+	        disparo = coordenadasTableroUsuario[random.nextInt(coordenadasTableroUsuario.length)];
+	    } while (disparosCPU.contains(disparo));
+
+	    boolean acierto = false;
+
+	    // Recorrer todos los barcos del jugador
+	    for (int i = 0; i < barcosUsuario.size(); i++) {
+	        List<Point> barco = barcosUsuario.get(i);
+	        for (int j = 0; j < barco.size(); j++) {
+	            Point parte = barco.get(j);
+	            if (parte.equals(disparo)) {
+	                puntoExplosion = disparo;
+	                iniciarExplosionAnimada();
+	                puntosCPU += 5;
+	                acierto = true;
+	                break;
+	            }
+	        }
+	        if (acierto) break;
+	    }
+
+	    disparosCPU.add(disparo);
+	    aciertosCPU.add(acierto);
+
+	    panelDisparo.repaint(); // Actualiza el tablero
+
+	    turnoJugador = !acierto; // Si no acierta, pasa el turno al jugador
+	    comprobarGanador();      // Verifica si alguien ha ganado
+
+	    // Si la CPU acierta, vuelve a disparar tras una pausa
+	    if (!juegoTerminado && !turnoJugador) {
+	        Timer timer = new Timer(600, evt -> procesarDisparoCPU());
+	        timer.setRepeats(false);
+	        timer.start();
+	    }
+	}
+
+
+
+
+	public void manejarDisparo(Point click) {
+		// SOLO PARA VERIFICAR SI SE HA DISPARADO YA AHI
+		for (int i = 0; i < disparosJugador.size(); i++) {
+			if (disparosJugador.get(i).equals(click)) return;
+		}
+		// Añade el disparo hecho a la lista
+		disparosJugador.add(click);
+
+		boolean impacto = false;
+
+		for (int i = 0; i < formacionElegidaCPU.size(); i++) {
+			// Ya que formacion.get(i) no devuelve un punto sino una lista de puntos
+			List<Point> barco = formacionElegidaCPU.get(i);
+
+			for (int j = 0; j < barco.size(); j++) {
+				Point parte = barco.get(j);
+				if (estaEnCelda(parte, click)) {
+					impacto = true;
+					break;
+				}
+			}
+			if (impacto) break;
+		}
+
+		panelDisparo.repaint();
+	}
+
+	private boolean estaEnCelda(Point celda, Point click) {
+		int celdaX = celda.x;
+		int celdaY = celda.y;
+		int anchoCelda = 66;
+		int altoCelda = 48;
+
+		// Devuelve TRUE o FALSE dependiendo si esta o no en la celda
+
+		return (click.x >= celdaX && click.x < celdaX + anchoCelda &&
+				click.y >= celdaY && click.y < celdaY + altoCelda);
+
+	}
+
+
+
+	public void procesarDisparoJugador(Point disparo) {
+		// Verifica que el jugador no haya disparado ya a esta celda
+		if (!disparosJugador.contains(disparo)) {
+			boolean acierto = false; // Variable para saber si el disparo acertó
+
+			// Recorre todos los barcos de la CPU
+			for (int i = 0; i < barcosCPU.length; i++) {
+				Point[] barco = barcosCPU[i];
+				// Recorre todas las partes de cada barco
+				for (int j = 0; j < barco.length; j++) {
+					Point parte = barco[j];
+					if (parte.equals(disparo)) {
+						puntoExplosion = disparo; // ANIMACION
+						iniciarExplosionAnimada(); // Inicia la animación de explosión
+
+						puntosUsuario += 5; // Suma puntos al jugador
+						acierto = true; // Marca que fue un acierto
+						break; // Sale del bucle interno
+					}
+				}
+				if (acierto) break; // Si ya acertó, no sigue buscando
+			}
+
+			// Guarda el disparo en la lista de disparos realizados
+			disparosJugador.add(disparo);
+			// Guarda si fue un acierto o no en la lista de resultados
+			aciertosJugador.add(acierto);
+			// Redibuja el panel de disparo para mostrar el nuevo disparo
+			panelDisparo.repaint();
+
+			// Si acierta, mantiene el turno; si falla, lo pierde
+			turnoJugador = acierto;
+
+			comprobarGanador();
+
+			// LANZA EL TURNO DE LA CPU
+			if (!juegoTerminado && !turnoJugador) {
+				// Espera 600ms antes de que la CPU dispare
+				Timer timer = new Timer(600, evt -> procesarDisparoCPU());
+				timer.setRepeats(false); // Solo se ejecuta una vez
+				timer.start(); // Inicia el temporizador
+			}
+		}
+	}
+
+
+	private void comprobarGanador() {
+		int puntosMaximos = 85; 
+
+		if (puntosUsuario >= puntosMaximos) {
+			juegoTerminado = true;
+			JOptionPane.showMessageDialog(panelDisparo, "🎉 ¡Has ganado la partida!");
+			Modelo modelo = new Modelo();
+			Connection conexion = null;
+			conexion=	modelo.conectar();
+			modelo.sumarVictoria(conexion, txtUsuario.getText());
+
+		} else if (puntosCPU >= puntosMaximos) {
+			juegoTerminado = true;
+			JOptionPane.showMessageDialog(panelDisparo, "💥 Has perdido contra la CPU.");
 		}
 	}
 
@@ -1397,6 +1287,26 @@ public class Vista {
 
 		//Informar al jugador
 		JOptionPane.showMessageDialog(panelColocacion, "Coloca tus barcos en el tablero izquierdo.");
+	}
+	private void iniciarExplosionAnimada() {
+		radioExplosion = 0;
+
+		if (timerExplosion != null && timerExplosion.isRunning()) {
+			timerExplosion.stop();
+		}
+
+		timerExplosion = new Timer(30, new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				radioExplosion += 8;
+				if (radioExplosion > 80) {
+					timerExplosion.stop();
+					puntoExplosion = null;
+				}
+				panelDisparo.repaint();
+			}
+		});
+
+		timerExplosion.start();
 	}
 
 	private void reproducirSonidoMenu() {
